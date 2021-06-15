@@ -2244,4 +2244,4 @@
     :init-fn |respo-value.main/main!
     :compact-output? true
     :storage-key |calcit.cirru
-    :version |0.4.1
+    :version |0.4.2

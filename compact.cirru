@@ -2,7 +2,7 @@
 {} (:package |respo-value)
   :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
-    :version |0.4.1
+    :version |0.4.2
   :files $ {}
     |respo-value.style.layout $ {}
       :ns $ quote
