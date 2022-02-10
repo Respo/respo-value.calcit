@@ -2,12 +2,11 @@
 {} (:package |respo-value)
   :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
-    :version |0.4.2
+    :version |0.4.3-a1
+  :entries $ {}
   :files $ {}
     |respo-value.style.layout $ {}
-      :ns $ quote
-        ns respo-value.style.layout $ :require
-          [] hsl.core :refer $ [] hsl
+      :ns $ quote (ns respo-value.style.layout)
       :defs $ {}
         |column $ quote
           def column $ {} (:display |flex) (:flex-direction |column) (:align-items |flex-start)
@@ -15,16 +14,16 @@
           def container $ {} (:padding "|200px 24px")
         |row $ quote
           def row $ {} (:display |flex) (:flex-direction |row) (:align-items |flex-start)
-      :proc $ quote ()
     |respo-value.main $ {}
       :ns $ quote
         ns respo-value.main $ :require
-          [] hsl.core :refer $ [] hsl
-          [] respo.core :refer $ [] render! clear-cache! realize-ssr!
-          [] respo.cursor :refer $ [] update-states
-          [] respo-value.comp.container :refer $ [] comp-container
-          [] respo-value.schema :as schema
-          [] respo.util.id :refer $ [] get-id!
+          respo.core :refer $ render! clear-cache! realize-ssr!
+          respo.cursor :refer $ update-states
+          respo-value.comp.container :refer $ comp-container
+          respo-value.schema :as schema
+          respo.util.id :refer $ get-id!
+          "\"./calcit.build-errors" :default build-errors
+          "\"bottom-tip" :default hud!
       :defs $ {}
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -40,7 +39,14 @@
         |mount-target $ quote
           def mount-target $ .querySelector js/document |.app
         |reload! $ quote
-          defn reload! () (clear-cache!) (render-app! render!) (println "|Code updated.")
+          defn reload! ()
+            if (nil? build-errors)
+              do (remove-watch *store :renderer) (clear-cache!)
+                add-watch *store :rerender $ fn (prev store) (render-app! render!)
+                render-app! render!
+                hud! "\"ok~" "\"Ok"
+              hud! "\"error" build-errors
+            println "|Code updated."
         |render-app! $ quote
           defn render-app! (renderer)
             renderer mount-target (comp-container @*store) dispatch!
@@ -51,11 +57,10 @@
             case op-type
               :states $ update-states store op-data
               op-type store
-      :proc $ quote ()
     |respo-value.style.widget $ {}
       :ns $ quote
         ns respo-value.style.widget $ :require
-          [] respo.util.format :refer $ [] hsl
+          respo.util.format :refer $ hsl
       :defs $ {}
         |literal $ quote
           def literal $ {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 4px")
@@ -64,13 +69,13 @@
             :font-size |12px
             :display |inline-block
             :margin |4px
-            :box-shadow $ str "|0 0 1px " (hsl 0 0 0 0.3)
+            :box-shadow $ str "|0 0 1px " (hsl 0 0 0 0.2)
             :vertical-align |top
         |only-text $ quote
           def only-text $ {} (:pointer-events |none)
         |structure $ quote
           def structure $ {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 2px")
-            :color $ hsl 0 0 40
+            :color $ hsl 180 80 70
             :font-family "|Source Code Pro, menlo, monospace"
             :font-size |12px
             :display |inline-block
@@ -86,47 +91,43 @@
             :font-size |14px
         |style-unknown $ quote
           def style-unknown $ {}
-      :proc $ quote ()
     |respo-value.schema $ {}
-      :ns $ quote
-        ns respo-value.schema $ :require ([] clojure.string :as string)
+      :ns $ quote (ns respo-value.schema)
       :defs $ {}
-        |a-hash-map $ quote
-          def a-hash-map $ {,} :a 1 :b 2
-        |a-list $ quote
-          def a-list $ [] 1 2 3 4
-        |a-function $ quote
-          def a-function $ fn (x) (+ x 1)
-        |a-bool $ quote (def a-bool true)
-        |a-hash-set $ quote
-          def a-hash-set $ #{} 1 2 3
-        |a-vector $ quote
-          def a-vector $ [] 1 2 3
         |a-nested-hash-map $ quote
           def a-nested-hash-map $ {,} :a 1 :b
             {,} :c 3 :d ({,} :e 4) :f 5
+        |a-mixed-data $ quote
+          def a-mixed-data $ {,} :a
+            [] 1 2 $ {,} :c |str
         |a-nested-vector $ quote
           def a-nested-vector $ [] 1 2
             [] 3 4 $ [] 5 6
             , 7
-        |a-string $ quote (def a-string "|a string")
-        |a-keyword $ quote (def a-keyword :kywd)
-        |a-mixed-data $ quote
-          def a-mixed-data $ {,} :a
-            [] 1 2 $ {,} :c |str
         |store $ quote
           def store $ {}
             :states $ {}
             :cursor $ []
+        |a-hash-map $ quote
+          def a-hash-map $ {,} :a 1 :b 2
+        |a-hash-set $ quote
+          def a-hash-set $ #{} 1 2 3
+        |a-keyword $ quote (def a-keyword :kywd)
+        |a-bool $ quote (def a-bool true)
+        |a-list $ quote
+          def a-list $ [] 1 2 3 4
         |a-number $ quote (def a-number 1)
-      :proc $ quote ()
+        |a-function $ quote
+          def a-function $ fn (x) (+ x 1)
+        |a-string $ quote (def a-string "|a string")
+        |a-vector $ quote
+          def a-vector $ [] 1 2 3
     |respo-value.config $ {}
       :ns $ quote (ns respo-value.config)
       :defs $ {}
         |dev? $ quote (def dev? true)
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main-fonts.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main-fonts.css") (:cdn-url "\"http://cdn.tiye.me/respo-value/") (:title "\"Value") (:icon "\"http://cdn.tiye.me/logo/respo.png") (:storage-key "\"respo-value")
-      :proc $ quote ()
     |respo-value.comp.container $ {}
       :ns $ quote
         ns respo-value.comp.container $ :require
@@ -168,25 +169,53 @@
           def style-section $ {} (:display |flex) (:font-family |Verdana) (:padding "|8px 8px")
         |style-value $ quote
           def style-value $ {}
-      :proc $ quote ()
-    |respo-value.style.decoration $ {}
-      :ns $ quote
-        ns respo-value.style.decoration $ :require
-          [] respo.util.format :refer $ [] hsl
-      :defs $ {}
-        |folded $ quote
-          def folded $ {}
-            :background-color $ hsl 0 0 30 0.1
-      :proc $ quote ()
     |respo-value.comp.value $ {}
       :ns $ quote
         ns respo-value.comp.value $ :require
-          [] hsl.core :refer $ [] hsl
-          [] respo-value.style.widget :as widget
-          [] respo-value.style.layout :as layout
-          [] respo-value.style.decoration :as decoration
-          [] respo.core :refer $ [] defcomp <> div span list-> >>
+          respo.util.format :refer $ hsl
+          respo-value.style.widget :as widget
+          respo-value.style.layout :as layout
+          respo.core :refer $ defcomp <> div span list-> >>
       :defs $ {}
+        |render-fields $ quote
+          defn render-fields (states xs level)
+            list->
+              {} $ :style (merge widget/style-children layout/column)
+              -> xs (to-pairs)
+                map-indexed $ fn (index field)
+                  [] index $ div
+                    {} $ :style layout/row
+                    comp-value states (first field) 0
+                    comp-value (>> states index) (last field) (inc level)
+        |comp-bool $ quote
+          defcomp comp-bool (x)
+            <> (str x)
+              merge widget/literal $ {}
+                :color $ hsl 320 90 60
+        |comp-list $ quote
+          defcomp comp-list (states x level)
+            let
+                cursor $ :cursor states
+                state $ either (:data states)
+                  {} $ :folded? (>= level 1)
+                folded? $ :folded? state
+              if
+                and folded? $ not (empty? x)
+                div
+                  {}
+                    :style $ merge widget/structure style-folded
+                    :on-click $ fn (e d!)
+                      d! cursor $ update state :folded? not
+                  <>
+                    str |[]~ $ count x
+                    , widget/only-text
+                div
+                  {}
+                    :style $ merge widget/structure layout/row
+                    :on-click $ fn (e d!)
+                      d! cursor $ update state :folded? not
+                  <> (str |[]) widget/only-text
+                  render-children states x level
         |comp-map $ quote
           defcomp comp-map (states x level)
             let
@@ -198,7 +227,7 @@
                 and folded? $ not (empty? x)
                 div
                   {}
-                    :style $ merge widget/structure decoration/folded
+                    :style $ merge widget/structure style-folded
                     :on-click $ fn (e d!)
                       d! cursor $ update state :folded? not
                   <>
@@ -211,49 +240,10 @@
                       d! cursor $ update state :folded? not
                   <> |{} widget/only-text
                   render-fields states x level
-        |render-children $ quote
-          defn render-children (states xs level)
-            list->
-              {} $ :style (merge widget/style-children layout/column)
-              -> xs $ map-indexed
-                fn (index child)
-                  [] index $ comp-value (>> states index) child (inc level)
-        |render-fields $ quote
-          defn render-fields (states xs level)
-            list->
-              {} $ :style (merge widget/style-children layout/column)
-              -> xs (to-pairs)
-                map-indexed $ fn (index field)
-                  [] index $ div
-                    {} $ :style layout/row
-                    comp-value states (first field) 0
-                    comp-value (>> states index) (last field) (inc level)
         |comp-nil $ quote
-          defcomp comp-nil () $ <> |nil widget/literal
-        |comp-list $ quote
-          defcomp comp-list (states x level)
-            let
-                cursor $ :cursor states
-                state $ either (:data states)
-                  {} $ :folded? (>= level 1)
-                folded? $ :folded? state
-              if
-                and folded? $ not (empty? x)
-                div
-                  {}
-                    :style $ merge widget/structure decoration/folded
-                    :on-click $ fn (e d!)
-                      d! cursor $ update state :folded? not
-                  <>
-                    str "|'()~" $ count x
-                    , widget/only-text
-                div
-                  {}
-                    :style $ merge widget/structure layout/row
-                    :on-click $ fn (e d!)
-                      d! cursor $ update state :folded? not
-                  <> (str "|'()") widget/only-text
-                  render-children states x level
+          defcomp comp-nil () $ <> |nil
+            merge widget/literal $ {}
+              :color $ hsl 320 80 60
         |comp-set $ quote
           defcomp comp-set (states x level)
             let
@@ -265,7 +255,7 @@
                 and folded? $ not (empty? x)
                 div
                   {}
-                    :style $ merge widget/structure decoration/folded
+                    :style $ merge widget/structure style-folded
                     :on-click $ fn (e d!)
                       d! cursor $ update state :folded? not
                   <>
@@ -277,35 +267,6 @@
                     :on-click $ fn (e d!)
                       d! cursor $ update state :folded? not
                   <> (str |#{}) widget/only-text
-                  render-children states x level
-        |comp-string $ quote
-          defcomp comp-string (x)
-            <> (pr-str x) widget/literal
-        |comp-function $ quote
-          defcomp comp-function () $ <> |fn widget/literal
-        |comp-vector $ quote
-          defcomp comp-vector (states x level)
-            let
-                cursor $ :cursor states
-                state $ or (:data states)
-                  {} $ :folded? (>= level 1)
-                folded? $ :folded? state
-              if
-                and folded? $ not (empty? x)
-                div
-                  {}
-                    :style $ merge widget/structure decoration/folded
-                    :on-click $ fn (e d!)
-                      d! cursor $ update state :folded? not
-                  <>
-                    str |[]~ $ count x
-                    , widget/only-text
-                div
-                  {}
-                    :style $ merge widget/structure layout/row
-                    :on-click $ fn (e d!)
-                      d! cursor $ update state :folded? not
-                  <> (str |[]) widget/only-text
                   render-children states x level
         |comp-value $ quote
           defcomp comp-value (states x level)
@@ -329,11 +290,55 @@
                       :inner-text $ str |unknown (pr-str x)
         |comp-keyword $ quote
           defcomp comp-keyword (x)
-            <> (str x) widget/literal
+            <> (str x)
+              merge widget/literal $ {}
+                :color $ hsl 200 90 60
         |comp-number $ quote
           defcomp comp-number (x)
-            <> (str x) widget/literal
-        |comp-bool $ quote
-          defcomp comp-bool (x)
-            <> (str x) widget/literal
-      :proc $ quote ()
+            <> (str x)
+              merge widget/literal $ {}
+                :color $ hsl 200 80 50
+        |comp-string $ quote
+          defcomp comp-string (x)
+            <> (pr-str x)
+              merge widget/literal $ {}
+                :color $ hsl 110 80 50
+                :background-color $ hsl 0 0 97
+        |comp-vector $ quote
+          defcomp comp-vector (states x level)
+            let
+                cursor $ :cursor states
+                state $ or (:data states)
+                  {} $ :folded? (>= level 1)
+                folded? $ :folded? state
+              if
+                and folded? $ not (empty? x)
+                div
+                  {}
+                    :style $ merge widget/structure style-folded
+                    :on-click $ fn (e d!)
+                      d! cursor $ update state :folded? not
+                  <>
+                    str |[]~ $ count x
+                    , widget/only-text
+                div
+                  {}
+                    :style $ merge widget/structure layout/row
+                    :on-click $ fn (e d!)
+                      d! cursor $ update state :folded? not
+                  <> (str |[]) widget/only-text
+                  render-children states x level
+        |render-children $ quote
+          defn render-children (states xs level)
+            list->
+              {} $ :style (merge widget/style-children layout/column)
+              -> xs $ map-indexed
+                fn (index child)
+                  [] index $ comp-value (>> states index) child (inc level)
+        |comp-function $ quote
+          defcomp comp-function () $ <> |fn
+            merge widget/literal $ {}
+              :color $ hsl 0 90 70
+        |style-folded $ quote
+          def style-folded $ {}
+            :background-color $ hsl 0 0 30 0.1
