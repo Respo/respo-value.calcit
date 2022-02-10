@@ -2,7 +2,7 @@
 {} (:package |respo-value)
   :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
-    :version |0.4.2
+    :version |0.4.3-a1
   :entries $ {}
   :files $ {}
     |respo-value.style.layout $ {}
@@ -22,6 +22,8 @@
           respo-value.comp.container :refer $ comp-container
           respo-value.schema :as schema
           respo.util.id :refer $ get-id!
+          "\"./calcit.build-errors" :default build-errors
+          "\"bottom-tip" :default hud!
       :defs $ {}
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -37,7 +39,14 @@
         |mount-target $ quote
           def mount-target $ .querySelector js/document |.app
         |reload! $ quote
-          defn reload! () (clear-cache!) (render-app! render!) (println "|Code updated.")
+          defn reload! ()
+            if (nil? build-errors)
+              do (remove-watch *store :renderer) (clear-cache!)
+                add-watch *store :rerender $ fn (prev store) (render-app! render!)
+                render-app! render!
+                hud! "\"ok~" "\"Ok"
+              hud! "\"error" build-errors
+            println "|Code updated."
         |render-app! $ quote
           defn render-app! (renderer)
             renderer mount-target (comp-container @*store) dispatch!
@@ -286,7 +295,9 @@
                 :color $ hsl 200 90 60
         |comp-number $ quote
           defcomp comp-number (x)
-            <> (str x) widget/literal
+            <> (str x)
+              merge widget/literal $ {}
+                :color $ hsl 200 80 50
         |comp-string $ quote
           defcomp comp-string (x)
             <> (pr-str x)
@@ -325,7 +336,9 @@
                 fn (index child)
                   [] index $ comp-value (>> states index) child (inc level)
         |comp-function $ quote
-          defcomp comp-function () $ <> |fn widget/literal
+          defcomp comp-function () $ <> |fn
+            merge widget/literal $ {}
+              :color $ hsl 0 90 70
         |style-folded $ quote
           def style-folded $ {}
             :background-color $ hsl 0 0 30 0.1
