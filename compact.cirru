@@ -2,7 +2,7 @@
 {} (:package |respo-value)
   :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
-    :version |0.4.3-a2
+    :version |0.4.3-a3
   :entries $ {}
   :files $ {}
     |respo-value.style.layout $ {}
@@ -186,7 +186,7 @@
                   [] index $ div
                     {} $ :style layout/row
                     comp-value states (first field) 0
-                    comp-value (>> states index) (last field) (inc level)
+                    comp-value (>> states index) (last field) (dec level)
         |comp-bool $ quote
           defcomp comp-bool (x)
             <> (str x)
