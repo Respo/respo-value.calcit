@@ -2,7 +2,7 @@
 {} (:package |respo-value)
   :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
-    :version |0.4.3-a1
+    :version |0.4.3-a2
   :entries $ {}
   :files $ {}
     |respo-value.style.layout $ {}
@@ -11,7 +11,7 @@
         |column $ quote
           def column $ {} (:display |flex) (:flex-direction |column) (:align-items |flex-start)
         |container $ quote
-          def container $ {} (:padding "|200px 24px")
+          def container $ {} (:padding "|100px 24px")
         |row $ quote
           def row $ {} (:display |flex) (:flex-direction |row) (:align-items |flex-start)
     |respo-value.main $ {}
@@ -90,7 +90,7 @@
             :color $ hsl 0 0 50
             :font-size |14px
         |style-unknown $ quote
-          def style-unknown $ {}
+          def style-unknown $ {} (:color :red) (:font-size 12)
     |respo-value.schema $ {}
       :ns $ quote (ns respo-value.schema)
       :defs $ {}
@@ -159,7 +159,7 @@
               span $ {} (:inner-text hint) (:style widget/style-hint)
               div
                 {} $ :style style-value
-                comp-value states value 0
+                comp-value states value 1
         |data-table $ quote
           def data-table $ [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a keyword:" schema/a-keyword) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
             [] "|an element" $ div ({})
@@ -197,7 +197,7 @@
             let
                 cursor $ :cursor states
                 state $ either (:data states)
-                  {} $ :folded? (>= level 1)
+                  {} $ :folded? (< level 1)
                 folded? $ :folded? state
               if
                 and folded? $ not (empty? x)
@@ -221,7 +221,7 @@
             let
                 cursor $ :cursor states
                 state $ either (:data states)
-                  {} $ :folded? (>= level 1)
+                  {} $ :folded? (< level 1)
                 folded? $ :folded? state
               if
                 and folded? $ not (empty? x)
@@ -249,7 +249,7 @@
             let
                 cursor $ :cursor states
                 state $ either (:data states)
-                  {} $ :folded? (>= level 1)
+                  {} $ :folded? (< level 1)
                 folded? $ :folded? state
               if
                 and folded? $ not (empty? x)
@@ -271,7 +271,7 @@
         |comp-value $ quote
           defcomp comp-value (states x level)
             let
-                level $ either level 0
+                level $ either level 1
               cond
                   nil? x
                   comp-nil
@@ -286,8 +286,7 @@
                 (map? x) (comp-map states x level)
                 true $ div
                   {} (:style widget/style-unknown)
-                    :attrs $ {}
-                      :inner-text $ str |unknown (pr-str x)
+                    :inner-text $ str-spaced |unknown (pr-str x)
         |comp-keyword $ quote
           defcomp comp-keyword (x)
             <> (str x)
@@ -300,10 +299,14 @@
                 :color $ hsl 200 80 50
         |comp-string $ quote
           defcomp comp-string (x)
-            <> (pr-str x)
-              merge widget/literal $ {}
-                :color $ hsl 110 80 50
-                :background-color $ hsl 0 0 97
+            span
+              {} $ :style
+                merge widget/literal $ {}
+                  :color $ hsl 110 80 50
+                  :background-color $ hsl 0 0 97
+              <> "\"\"" $ {}
+                :color $ hsl 0 0 40 0.2
+              <> x
         |comp-vector $ quote
           defcomp comp-vector (states x level)
             let
@@ -334,11 +337,13 @@
               {} $ :style (merge widget/style-children layout/column)
               -> xs $ map-indexed
                 fn (index child)
-                  [] index $ comp-value (>> states index) child (inc level)
+                  [] index $ comp-value (>> states index) child (dec level)
         |comp-function $ quote
           defcomp comp-function () $ <> |fn
             merge widget/literal $ {}
               :color $ hsl 0 90 70
         |style-folded $ quote
           def style-folded $ {}
-            :background-color $ hsl 0 0 30 0.1
+            :background-color $ hsl 300 80 60
+            :padding "|4px 6px"
+            :color :white
