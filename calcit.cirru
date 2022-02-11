@@ -1201,7 +1201,7 @@
                                               |j $ {} (:type :leaf) (:id |rJsvWj0ZjKq-) (:text |field) (:by |root) (:at 1505501650560)
                                           |v $ {} (:type :expr) (:id |HJhDWiRWjY5-) (:by nil) (:at 1505501650560)
                                             :data $ {}
-                                              |T $ {} (:type :leaf) (:id |ByTPbsCWsY9Z) (:text |inc) (:by |root) (:at 1505501650560)
+                                              |T $ {} (:type :leaf) (:id |ByTPbsCWsY9Z) (:text |dec) (:by |_PSBNfhEj) (:at 1644559756757)
                                               |j $ {} (:type :leaf) (:id |ByRD-oC-iYcb) (:text |level) (:by |root) (:at 1505501650560)
                       |n $ {} (:type :expr) (:by |_PSBNfhEj) (:at 1611931674311)
                         :data $ {}
@@ -2353,5 +2353,5 @@
     :init-fn |respo-value.main/main!
     :compact-output? true
     :storage-key |calcit.cirru
-    :version |0.4.3-a2
+    :version |0.4.3-a3
   :entries $ {}
