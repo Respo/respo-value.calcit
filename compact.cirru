@@ -2,7 +2,7 @@
 {} (:package |respo-value)
   :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
-    :version |0.4.3-a3
+    :version |0.4.3
   :entries $ {}
   :files $ {}
     |respo-value.style.layout $ {}
@@ -68,19 +68,21 @@
             :font-family "|Source Code Pro, menlo, monospace"
             :font-size |12px
             :display |inline-block
-            :margin |4px
+            :margin "|2px 4px"
             :box-shadow $ str "|0 0 1px " (hsl 0 0 0 0.2)
             :vertical-align |top
         |only-text $ quote
-          def only-text $ {} (:pointer-events |none)
+          def only-text $ {} (:pointer-events |none) (:font-size 14) (:line-height "\"20px")
         |structure $ quote
           def structure $ {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 2px")
             :color $ hsl 180 80 70
             :font-family "|Source Code Pro, menlo, monospace"
             :font-size |12px
             :display |inline-block
-            :margin |4px
-            :box-shadow $ str "|0 0 1px " (hsl 0 0 0 0.3)
+            :margin "|1px 2px 1px 4px"
+            :border-color $ hsl 0 0 80 0.3
+            :border-style :solid
+            :border-width "\"1px 0 0 1px"
             :vertical-align |top
             :cursor |pointer
         |style-children $ quote
@@ -176,6 +178,7 @@
           respo-value.style.widget :as widget
           respo-value.style.layout :as layout
           respo.core :refer $ defcomp <> div span list-> >>
+          respo.comp.space :refer $ =<
       :defs $ {}
         |render-fields $ quote
           defn render-fields (states xs level)
@@ -186,12 +189,13 @@
                   [] index $ div
                     {} $ :style layout/row
                     comp-value states (first field) 0
+                    =< 2 nil
                     comp-value (>> states index) (last field) (dec level)
         |comp-bool $ quote
           defcomp comp-bool (x)
             <> (str x)
               merge widget/literal $ {}
-                :color $ hsl 320 90 60
+                :color $ hsl 320 100 40
         |comp-list $ quote
           defcomp comp-list (states x level)
             let
@@ -302,8 +306,8 @@
             span
               {} $ :style
                 merge widget/literal $ {}
-                  :color $ hsl 110 80 50
-                  :background-color $ hsl 0 0 97
+                  :color $ hsl 110 20 56
+                  :background-color $ hsl 30 100 97
               <> "\"\"" $ {}
                 :color $ hsl 0 0 40 0.2
               <> x
@@ -347,3 +351,4 @@
             :background-color $ hsl 300 80 60
             :padding "|4px 6px"
             :color :white
+            :border-radius "\"12px"
