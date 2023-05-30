@@ -1,6 +1,6 @@
 
 {} (:package |respo-value)
-  :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!) (:version |0.4.3)
+  :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!) (:version |0.4.4)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
   :entries $ {}
   :files $ {}
@@ -27,7 +27,7 @@
                 {} $ :style style-value
                 comp-value states value 1
         |data-table $ quote
-          def data-table $ [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a keyword:" schema/a-keyword) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
+          def data-table $ [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a tag:" schema/a-tag) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
             [] "|an element" $ div ({})
               div $ {} (:style style-section)
               =< 8 nil
@@ -56,11 +56,6 @@
           defcomp comp-function () $ <> |fn
             merge widget/literal $ {}
               :color $ hsl 0 90 70
-        |comp-keyword $ quote
-          defcomp comp-keyword (x)
-            <> (str x)
-              merge widget/literal $ {}
-                :color $ hsl 200 90 60
         |comp-list $ quote
           defcomp comp-list (states x level)
             let
@@ -152,6 +147,11 @@
               <> "\"\"" $ {}
                 :color $ hsl 0 0 40 0.2
               <> x
+        |comp-tag $ quote
+          defcomp comp-tag (x)
+            <> (str x)
+              merge widget/literal $ {}
+                :color $ hsl 200 90 60
         |comp-value $ quote
           defcomp comp-value (states x level)
             let
@@ -161,7 +161,7 @@
                   comp-nil
                 (number? x) (comp-number x)
                 (string? x) (comp-string x)
-                (keyword? x) (comp-keyword x)
+                (tag? x) (comp-tag x)
                 (fn? x) (comp-function)
                 (or (= x true) (= x false))
                   comp-bool x
@@ -283,7 +283,6 @@
           def a-hash-map $ {,} :a 1 :b 2
         |a-hash-set $ quote
           def a-hash-set $ #{} 1 2 3
-        |a-keyword $ quote (def a-keyword :kywd)
         |a-list $ quote
           def a-list $ [] 1 2 3 4
         |a-mixed-data $ quote
@@ -298,6 +297,7 @@
             , 7
         |a-number $ quote (def a-number 1)
         |a-string $ quote (def a-string "|a string")
+        |a-tag $ quote (def a-tag :tg)
         |a-vector $ quote
           def a-vector $ [] 1 2 3
         |store $ quote
