@@ -1,6 +1,6 @@
 
 {}
-  :configs $ {} (:compact-output? true) (:extension |.cljs) (:init-fn |respo-value.main/main!) (:output |src) (:port 6001) (:reload-fn |respo-value.main/reload!) (:storage-key |calcit.cirru) (:version |0.4.4)
+  :configs $ {} (:compact-output? true) (:extension |.cljs) (:init-fn |respo-value.main/main!) (:output |src) (:port 6001) (:reload-fn |respo-value.main/reload!) (:storage-key |calcit.cirru) (:version |0.4.5)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
   :entries $ {}
   :ir $ {} (:package |respo-value)
@@ -1589,7 +1589,6 @@
               |r $ {} (:at 1505501650560) (:by nil) (:id |BkoMBiCWjF5Z) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1505501650560) (:by |root) (:id |H1nzBoAWoY9Z) (:text |op) (:type :leaf)
-                  |j $ {} (:at 1505501650560) (:by |root) (:id |B1azHsCbsKqb) (:text |op-data) (:type :leaf)
               |v $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:text |let) (:type :leaf)
@@ -1603,7 +1602,6 @@
                               |T $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:text |updater) (:type :leaf)
                               |j $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:text |@*store) (:type :leaf)
                               |r $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:text |op) (:type :leaf)
-                              |v $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:text |op-data) (:type :leaf)
                               |x $ {} (:at 1611932108289) (:by |_PSBNfhEj) (:type :expr)
                                 :data $ {}
                                   |T $ {} (:at 1658657682315) (:by |_PSBNfhEj) (:text |generate-id!) (:type :leaf)
@@ -1748,32 +1746,43 @@
               |r $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |store) (:type :leaf)
-                  |j $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-type) (:type :leaf)
-                  |r $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-data) (:type :leaf)
+                  |j $ {} (:at 1691078490706) (:by |_PSBNfhEj) (:text |op) (:type :leaf)
                   |v $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-id) (:type :leaf)
               |v $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |;) (:type :leaf)
                   |j $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |println) (:type :leaf)
                   |r $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |store) (:type :leaf)
-                  |v $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-type) (:type :leaf)
-                  |x $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-data) (:type :leaf)
+                  |v $ {} (:at 1691078492303) (:by |_PSBNfhEj) (:text |op) (:type :leaf)
               |x $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
                 :data $ {}
-                  |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |case) (:type :leaf)
-                  |j $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-type) (:type :leaf)
-                  |r $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
+                  |T $ {} (:at 1691078496822) (:by |_PSBNfhEj) (:text |tag-match) (:type :leaf)
+                  |j $ {} (:at 1691078494300) (:by |_PSBNfhEj) (:text |op) (:type :leaf)
+                  |r $ {} (:at 1691078498987) (:by |_PSBNfhEj) (:type :expr)
                     :data $ {}
-                      |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |:states) (:type :leaf)
-                      |j $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
+                      |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
                         :data $ {}
-                          |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |update-states) (:type :leaf)
-                          |j $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |store) (:type :leaf)
-                          |r $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-data) (:type :leaf)
+                          |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |:states) (:type :leaf)
+                          |b $ {} (:at 1691078502654) (:by |_PSBNfhEj) (:text |cursor) (:type :leaf)
+                          |f $ {} (:at 1691078502919) (:by |_PSBNfhEj) (:text |s) (:type :leaf)
+                      |b $ {} (:at 1691078505612) (:by |_PSBNfhEj) (:type :expr)
+                        :data $ {}
+                          |T $ {} (:at 1691078505612) (:by |_PSBNfhEj) (:text |update-states) (:type :leaf)
+                          |b $ {} (:at 1691078505612) (:by |_PSBNfhEj) (:text |store) (:type :leaf)
+                          |h $ {} (:at 1691078505612) (:by |_PSBNfhEj) (:text |cursor) (:type :leaf)
+                          |l $ {} (:at 1691078505612) (:by |_PSBNfhEj) (:text |s) (:type :leaf)
                   |yv $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:type :expr)
                     :data $ {}
-                      |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |op-type) (:type :leaf)
-                      |j $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |store) (:type :leaf)
+                      |T $ {} (:at 1691078508302) (:by |_PSBNfhEj) (:text |_) (:type :leaf)
+                      |j $ {} (:at 1691078509329) (:by |_PSBNfhEj) (:type :expr)
+                        :data $ {}
+                          |D $ {} (:at 1691078509920) (:by |_PSBNfhEj) (:text |do) (:type :leaf)
+                          |L $ {} (:at 1691078510399) (:by |_PSBNfhEj) (:type :expr)
+                            :data $ {}
+                              |T $ {} (:at 1691078511591) (:by |_PSBNfhEj) (:text |eprintln) (:type :leaf)
+                              |b $ {} (:at 1691078519256) (:by |_PSBNfhEj) (:text "|\"Unknown op:") (:type :leaf)
+                              |h $ {} (:at 1691078521819) (:by |_PSBNfhEj) (:text |op) (:type :leaf)
+                          |T $ {} (:at 1611932155152) (:by |_PSBNfhEj) (:text |store) (:type :leaf)
         :ns $ {} (:at 1505501650560) (:by nil) (:id |Hyz6VjCZjY9W) (:type :expr)
           :data $ {}
             |T $ {} (:at 1505501650560) (:by |root) (:id |ry76EjC-oYqb) (:text |ns) (:type :leaf)

@@ -1,6 +1,6 @@
 
 {} (:package |respo-value)
-  :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!) (:version |0.4.4)
+  :configs $ {} (:init-fn |respo-value.main/main!) (:reload-fn |respo-value.main/reload!) (:version |0.4.5)
     :modules $ [] |lilac/ |memof/ |respo.calcit/
   :entries $ {}
   :files $ {}
@@ -236,9 +236,9 @@
       :defs $ {}
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
-          defn dispatch! (op op-data)
+          defn dispatch! (op)
             let
-                store $ updater @*store op op-data (generate-id!)
+                store $ updater @*store op (generate-id!)
               reset! *store store
         |main! $ quote
           defn main! ()
@@ -262,10 +262,11 @@
         |ssr? $ quote
           def ssr? $ some? (.querySelector js/document |meta.respo-ssr)
         |updater $ quote
-          defn updater (store op-type op-data op-id) (; println store op-type op-data)
-            case op-type
-              :states $ update-states store op-data
-              op-type store
+          defn updater (store op op-id) (; println store op)
+            tag-match op
+                :states cursor s
+                update-states store cursor s
+              _ $ do (eprintln "\"Unknown op:" op) store
       :ns $ quote
         ns respo-value.main $ :require
           respo.core :refer $ render! clear-cache! realize-ssr!
