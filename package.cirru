@@ -1,5 +1,5 @@
 {}
   :dependencies $ {}
-    |calcit-lang/lilac |0.3.3
-    |calcit-lang/memof |main
-    |Respo/respo.calcit |main
+    |calcit-lang/lilac |0.4.0-a1
+    |calcit-lang/memof |0.0.13
+    |Respo/respo.calcit |0.16.0-a1
