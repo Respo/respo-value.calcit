@@ -1,7 +1,8 @@
 
-{} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `cr query` to inspect and `cr edit`/`cr tree` to modify. Run `cr docs agents --full` first. Manual edits must follow format and schema conventions, then run `cr edit format`.") (:package |respo-value) (:version |0.5.0)
+{} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --full` first. Manual edits must follow format and schema conventions, then run `calcit edit format`.") (:package |respo-value)
   :entries $ {}
     :default $ {} (:description |) (:init-fn 'respo-value.main/main!) (:mode :native) (:reload-fn 'respo-value.main/reload!)
+      :feature-policy $ {}
       :modules $ [] |respo.calcit/
       :type-slots $ {}
   :files $ {}
