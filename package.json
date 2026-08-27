@@ -2,7 +2,7 @@
   "version": "0.5.1",
   "packageManager": "yarn@4.12.0",
   "dependencies": {
-    "@calcit/procs": "^0.13.33"
+    "@calcit/procs": "0.13.51"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
