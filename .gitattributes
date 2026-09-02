@@ -1,2 +1,4 @@
 
 yarn.lock -diff linguist-generated
+
+config/calcit-quality.cirru text -diff linguist-generated
