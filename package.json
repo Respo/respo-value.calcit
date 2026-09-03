@@ -1,8 +1,14 @@
 {
   "version": "0.5.2",
   "packageManager": "yarn@4.12.0",
+  "scripts": {
+    "check": "calcit calcit.cirru --check-only",
+    "check:deprecated": "calcit calcit.cirru analyze deprecated",
+    "check:quality": "calcit calcit.cirru analyze quality --baseline config/calcit-quality.cirru",
+    "build:js": "calcit calcit.cirru js && vite build --base=./"
+  },
   "dependencies": {
-    "@calcit/procs": "0.13.51"
+    "@calcit/procs": "0.13.75"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",

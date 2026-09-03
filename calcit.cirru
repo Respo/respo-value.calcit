@@ -6,9 +6,9 @@
       :modules $ [] |respo.calcit/
       :type-slots $ {}
   :files $ {}
-    |respo-value.comp.container $ %{} 'FileEntry
+    'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
-        |comp-container $ %{} 'CodeEntry (:doc |)
+        'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-container (store)
               let
@@ -23,7 +23,7 @@
                   comp-inspect |States states nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-section $ %{} 'CodeEntry (:doc |)
+        'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-section (states hint value)
               div
@@ -34,7 +34,7 @@
                   comp-value states value 1
           :examples $ []
           :schema $ :: 'Dynamic
-        |data-table $ %{} 'CodeEntry (:doc |)
+        'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def data-table $ [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a tag:" schema/a-tag) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
               [] "|an element" $ div ({})
@@ -42,12 +42,12 @@
                 =< 8 nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |style-section $ %{} 'CodeEntry (:doc |)
+        'style-section $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-section $ {} (:display |flex) (:font-family |Verdana) (:padding "|8px 8px")
           :examples $ []
           :schema $ :: 'Dynamic
-        |style-value $ %{} 'CodeEntry (:doc |)
+        'style-value $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-value $ {}
           :examples $ []
@@ -63,9 +63,9 @@
             [] respo.core :refer $ [] defcomp <> div span list-> >>
             [] respo-value.style.layout :as layout
             [] respo-value.style.widget :as widget
-    |respo-value.comp.value $ %{} 'FileEntry
+    'respo-value.comp.value $ %{} 'FileEntry
       :defs $ {}
-        |comp-bool $ %{} 'CodeEntry (:doc |)
+        'comp-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-bool (x)
               <> (str x)
@@ -73,14 +73,14 @@
                   :color $ hsl 320 100 40
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-function $ %{} 'CodeEntry (:doc |)
+        'comp-function $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-function () $ <> |fn
               merge widget/literal $ {}
                 :color $ hsl 0 90 70
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-list $ %{} 'CodeEntry (:doc |)
+        'comp-list $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-list (states x level)
               let
@@ -108,7 +108,7 @@
                     render-children states x level
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-map $ %{} 'CodeEntry (:doc |)
+        'comp-map $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-map (states x level)
               let
@@ -136,14 +136,14 @@
                     render-fields states x level
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-nil $ %{} 'CodeEntry (:doc |)
+        'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-nil () $ <> |nil
               merge widget/literal $ {}
                 :color $ hsl 320 80 60
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-number $ %{} 'CodeEntry (:doc |)
+        'comp-number $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-number (x)
               <> (str x)
@@ -151,7 +151,7 @@
                   :color $ hsl 200 80 50
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-set $ %{} 'CodeEntry (:doc |)
+        'comp-set $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-set (states x level)
               let
@@ -179,7 +179,7 @@
                     render-children states x level
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-string $ %{} 'CodeEntry (:doc |)
+        'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-string (x)
               span
@@ -192,7 +192,7 @@
                 <> x
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-tag $ %{} 'CodeEntry (:doc |)
+        'comp-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-tag (x)
               <> (str x)
@@ -200,7 +200,7 @@
                   :color $ hsl 200 90 60
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-value $ %{} 'CodeEntry (:doc |)
+        'comp-value $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-value (states x level)
               let
@@ -222,7 +222,7 @@
                       :inner-text $ str-spaced |unknown (to-lispy-string x)
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-vector $ %{} 'CodeEntry (:doc |)
+        'comp-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-vector (states x level)
               let
@@ -249,7 +249,7 @@
                     render-children states x level
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-children $ %{} 'CodeEntry (:doc |)
+        'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-children (states xs level)
               list->
@@ -259,21 +259,25 @@
                     [] index $ comp-value (>> states index) child (dec level)
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-fields $ %{} 'CodeEntry (:doc |)
+        'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-fields (states xs level)
               list->
                 {} $ :style (merge widget/style-children layout/column)
-                -> xs (to-pairs)
+                -> xs (to-pairs) (&set:to-list)
                   map-indexed $ fn (index field)
-                    [] index $ div
-                      {} $ :style layout/row
-                      comp-value states (first field) 0
-                      =< 2 nil
-                      comp-value (>> states index) (last field) (dec level)
+                    [] (first field)
+                      div
+                        {} $ :style layout/row
+                        comp-value states (first field) 0
+                        =< 2 nil
+                        comp-value
+                          >> states $ first field
+                          last field
+                          dec level
           :examples $ []
           :schema $ :: 'Dynamic
-        |style-folded $ %{} 'CodeEntry (:doc |)
+        'style-folded $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-folded $ {}
               :background-color $ hsl 300 80 60
@@ -290,26 +294,26 @@
             respo-value.style.layout :as layout
             respo.core :refer $ defcomp <> div span list-> >>
             respo.comp.space :refer $ =<
-    |respo-value.config $ %{} 'FileEntry
+    'respo-value.config $ %{} 'FileEntry
       :defs $ {}
-        |dev? $ %{} 'CodeEntry (:doc |)
+        'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote (def dev? true)
           :examples $ []
           :schema $ :: 'Dynamic
-        |site $ %{} 'CodeEntry (:doc |)
+        'site $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def site $ {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |http://cdn.tiye.me/respo-value/) (:title |Value) (:icon |http://cdn.tiye.me/logo/respo.png) (:storage-key |respo-value)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns respo-value.config)
-    |respo-value.main $ %{} 'FileEntry
+    'respo-value.main $ %{} 'FileEntry
       :defs $ {}
-        |*store $ %{} 'CodeEntry (:doc |)
+        '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *store schema/store)
           :examples $ []
           :schema $ :: 'Dynamic
-        |dispatch! $ %{} 'CodeEntry (:doc |)
+        'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
               let
@@ -317,7 +321,7 @@
                 reset! *store store
           :examples $ []
           :schema $ :: 'Dynamic
-        |main! $ %{} 'CodeEntry (:doc |)
+        'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! ()
               if ssr? $ render-app! realize-ssr!
@@ -325,12 +329,12 @@
               add-watch *store :rerender $ fn (prev store) (render-app! render!)
           :examples $ []
           :schema $ :: 'Dynamic
-        |mount-target $ %{} 'CodeEntry (:doc |)
+        'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def mount-target $ .querySelector js/document |.app
           :examples $ []
           :schema $ :: 'Dynamic
-        |reload! $ %{} 'CodeEntry (:doc |)
+        'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! ()
               if (nil? build-errors)
@@ -342,21 +346,21 @@
               println "|Code updated."
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-app! $ %{} 'CodeEntry (:doc |)
+        'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-app! (renderer)
               renderer mount-target (comp-container @*store) dispatch!
           :examples $ []
           :schema $ :: 'Dynamic
-        |ssr? $ %{} 'CodeEntry (:doc |)
+        'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def ssr? $ some? (.querySelector js/document |meta.respo-ssr)
           :examples $ []
           :schema $ :: 'Dynamic
-        |updater $ %{} 'CodeEntry (:doc |)
+        'updater $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn updater (store op op-id) (; println store op)
-              tag-match op
+              match op
                 (:states cursor s) (update-states store cursor s)
                 _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
@@ -370,69 +374,69 @@
             respo-value.schema :as schema
             |./calcit.build-errors :default build-errors
             |bottom-tip :default hud!
-    |respo-value.schema $ %{} 'FileEntry
+    'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
-        |a-bool $ %{} 'CodeEntry (:doc |)
+        'a-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote (def a-bool true)
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-function $ %{} 'CodeEntry (:doc |)
+        'a-function $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-function $ fn (x) (+ x 1)
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-hash-map $ %{} 'CodeEntry (:doc |)
+        'a-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-hash-map $ {,} :a 1 :b 2
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-hash-set $ %{} 'CodeEntry (:doc |)
+        'a-hash-set $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-hash-set $ #{} 1 2 3
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-list $ %{} 'CodeEntry (:doc |)
+        'a-list $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-list $ [] 1 2 3 4
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-mixed-data $ %{} 'CodeEntry (:doc |)
+        'a-mixed-data $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-mixed-data $ {,} :a
               [] 1 2 $ {,} :c |str
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-nested-hash-map $ %{} 'CodeEntry (:doc |)
+        'a-nested-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-nested-hash-map $ {,} :a 1 :b
               {,} :c 3 :d ({,} :e 4) :f 5
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-nested-vector $ %{} 'CodeEntry (:doc |)
+        'a-nested-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-nested-vector $ [] 1 2
               [] 3 4 $ [] 5 6
               , 7
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-number $ %{} 'CodeEntry (:doc |)
+        'a-number $ %{} 'CodeEntry (:doc |)
           :code $ quote (def a-number 1)
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-string $ %{} 'CodeEntry (:doc |)
+        'a-string $ %{} 'CodeEntry (:doc |)
           :code $ quote (def a-string "|a string")
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-tag $ %{} 'CodeEntry (:doc |)
+        'a-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote (def a-tag :tg)
           :examples $ []
           :schema $ :: 'Dynamic
-        |a-vector $ %{} 'CodeEntry (:doc |)
+        'a-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def a-vector $ [] 1 2 3
           :examples $ []
           :schema $ :: 'Dynamic
-        |store $ %{} 'CodeEntry (:doc |)
+        'store $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def store $ {}
               :states $ {}
@@ -441,28 +445,28 @@
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns respo-value.schema)
-    |respo-value.style.layout $ %{} 'FileEntry
+    'respo-value.style.layout $ %{} 'FileEntry
       :defs $ {}
-        |column $ %{} 'CodeEntry (:doc |)
+        'column $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def column $ {} (:display |flex) (:flex-direction |column) (:align-items |flex-start)
           :examples $ []
           :schema $ :: 'Dynamic
-        |container $ %{} 'CodeEntry (:doc |)
+        'container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def container $ {} (:padding "|100px 24px")
           :examples $ []
           :schema $ :: 'Dynamic
-        |row $ %{} 'CodeEntry (:doc |)
+        'row $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def row $ {} (:display |flex) (:flex-direction |row) (:align-items |flex-start)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns respo-value.style.layout)
-    |respo-value.style.widget $ %{} 'FileEntry
+    'respo-value.style.widget $ %{} 'FileEntry
       :defs $ {}
-        |literal $ %{} 'CodeEntry (:doc |)
+        'literal $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def literal $ {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 4px")
               :color $ hsl 0 0 30
@@ -474,12 +478,12 @@
               :vertical-align |top
           :examples $ []
           :schema $ :: 'Dynamic
-        |only-text $ %{} 'CodeEntry (:doc |)
+        'only-text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def only-text $ {} (:pointer-events |none) (:font-size 14) (:line-height |20px)
           :examples $ []
           :schema $ :: 'Dynamic
-        |structure $ %{} 'CodeEntry (:doc |)
+        'structure $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def structure $ {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 2px")
               :color $ hsl 180 80 70
@@ -494,19 +498,19 @@
               :cursor |pointer
           :examples $ []
           :schema $ :: 'Dynamic
-        |style-children $ %{} 'CodeEntry (:doc |)
+        'style-children $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-children $ {} (:display |inline-block) (:vertical-align |top) (:padding |0px)
           :examples $ []
           :schema $ :: 'Dynamic
-        |style-hint $ %{} 'CodeEntry (:doc |)
+        'style-hint $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-hint $ {} (:width |240px)
               :color $ hsl 0 0 50
               :font-size |14px
           :examples $ []
           :schema $ :: 'Dynamic
-        |style-unknown $ %{} 'CodeEntry (:doc |)
+        'style-unknown $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-unknown $ {} (:color :red) (:font-size 12)
           :examples $ []
