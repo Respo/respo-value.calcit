@@ -266,11 +266,15 @@
                 {} $ :style (merge widget/style-children layout/column)
                 -> xs (to-pairs) (&set:to-list)
                   map-indexed $ fn (index field)
-                    [] index $ div
-                      {} $ :style layout/row
-                      comp-value states (first field) 0
-                      =< 2 nil
-                      comp-value (>> states index) (last field) (dec level)
+                    [] (first field)
+                      div
+                        {} $ :style layout/row
+                        comp-value states (first field) 0
+                        =< 2 nil
+                        comp-value
+                          >> states $ first field
+                          last field
+                          dec level
           :examples $ []
           :schema $ :: 'Dynamic
         'style-folded $ %{} 'CodeEntry (:doc |)
