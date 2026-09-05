@@ -19,7 +19,9 @@
                   list-> ({})
                     -> data-table $ map-indexed
                       fn (idx pair)
-                        [] idx $ comp-section (>> states idx) (first pair) (last pair)
+                        [] idx $ comp-section (>> states idx)
+                          option:unwrap $ first pair
+                          option:unwrap $ last pair
                   comp-inspect |States states nil
           :examples $ []
           :schema $ :: 'Dynamic
@@ -95,7 +97,7 @@
                     {}
                       :style $ merge widget/structure style-folded
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <>
                       str |[]~ $ count x
                       , widget/only-text
@@ -103,7 +105,7 @@
                     {}
                       :style $ merge widget/structure layout/row
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <> (str |[]) widget/only-text
                     render-children states x level
           :examples $ []
@@ -123,7 +125,7 @@
                     {}
                       :style $ merge widget/structure style-folded
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <>
                       str |{}~ $ count x
                       , widget/only-text
@@ -131,7 +133,7 @@
                     {}
                       :style $ merge widget/structure layout/row
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <> |{} widget/only-text
                     render-fields states x level
           :examples $ []
@@ -166,7 +168,7 @@
                     {}
                       :style $ merge widget/structure style-folded
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <>
                       str |#{}~ $ count x
                       , widget/only-text
@@ -174,7 +176,7 @@
                     {}
                       :style $ merge widget/structure layout/row
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <> (str |#{}) widget/only-text
                     render-children states x level
           :examples $ []
@@ -226,17 +228,16 @@
           :code $ quote
             defcomp comp-vector (states x level)
               let
-                  cursor $ :cursor states
-                  state $ or (:data states)
-                    {} $ :folded? (>= level 1)
-                  folded? $ :folded? state
+                  cursor $ option:unwrap-or (get states :cursor) ([])
+                  state $ option:unwrap-or (get states :data) ({})
+                  folded? $ option:unwrap-or (get state :folded?) (>= level 1)
                 if
                   and folded? $ not (empty? x)
                   div
                     {}
                       :style $ merge widget/structure style-folded
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <>
                       str |[]~ $ count x
                       , widget/only-text
@@ -244,7 +245,7 @@
                     {}
                       :style $ merge widget/structure layout/row
                       :on-click $ fn (e d!)
-                        d! cursor $ update state :folded? not
+                        d! cursor $ assoc state :folded? (not folded?)
                     <> (str |[]) widget/only-text
                     render-children states x level
           :examples $ []
@@ -266,14 +267,17 @@
                 {} $ :style (merge widget/style-children layout/column)
                 -> xs (to-pairs) (&set:to-list)
                   map-indexed $ fn (index field)
-                    [] (first field)
+                    []
+                      option:unwrap $ first field
                       div
                         {} $ :style layout/row
-                        comp-value states (first field) 0
+                        comp-value states
+                          option:unwrap $ first field
+                          , 0
                         =< 2 nil
                         comp-value
-                          >> states $ first field
-                          last field
+                          >> states $ option:unwrap (first field)
+                          option:unwrap $ last field
                           dec level
           :examples $ []
           :schema $ :: 'Dynamic
@@ -331,7 +335,7 @@
           :schema $ :: 'Dynamic
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def mount-target $ .querySelector js/document |.app
+            def mount-target $ js/document.querySelector |.app
           :examples $ []
           :schema $ :: 'Dynamic
         'reload! $ %{} 'CodeEntry (:doc |)
@@ -354,7 +358,7 @@
           :schema $ :: 'Dynamic
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def ssr? $ some? (.querySelector js/document |meta.respo-ssr)
+            def ssr? $ js-present? (js/document.querySelector |meta.respo-ssr)
           :examples $ []
           :schema $ :: 'Dynamic
         'updater $ %{} 'CodeEntry (:doc |)
