@@ -228,7 +228,7 @@
           :code $ quote
             defcomp comp-vector (states x level)
               let
-                  cursor $ option:unwrap-or (get states :cursor) ([])
+                  cursor $ option:unwrap (get states :cursor)
                   state $ option:unwrap-or (get states :data) ({})
                   folded? $ option:unwrap-or (get state :folded?) (>= level 1)
                 if
