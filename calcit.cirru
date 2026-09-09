@@ -316,7 +316,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *store schema/store)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Ref (:: 'Map 'Tag 'Dynamic)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
@@ -324,7 +324,9 @@
                   store $ updater @*store op (generate-id!)
                 reset! *store store
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ [] 'Dynamic
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! ()
@@ -332,12 +334,15 @@
               render-app! render!
               add-watch *store :rerender $ fn (prev store) (render-app! render!)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
+              :features $ #{} :js-ffi
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def mount-target $ js/document.querySelector |.app
+            def mount-target $ query-selector |.app
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'JsNullish 'Dynamic
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! ()
@@ -349,18 +354,23 @@
                 hud! |error build-errors
               println "|Code updated."
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
+              :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-app! (renderer)
               renderer mount-target (comp-container @*store) dispatch!
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ [] 'Dynamic
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def ssr? $ js-present? (js/document.querySelector |meta.respo-ssr)
+            def ssr? $ option:some? (query-selector |meta.respo-ssr)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Bool
         'updater $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn updater (store op op-id) (; println store op)
@@ -368,7 +378,10 @@
                 (:states cursor s) (update-states store cursor s)
                 _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {}
+              :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic 'String
+              :return $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns respo-value.main $ :require
@@ -378,6 +391,7 @@
             respo-value.schema :as schema
             |./calcit.build-errors :default build-errors
             |bottom-tip :default hud!
+            js-ffi.browser :refer $ query-selector
     'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
         'a-bool $ %{} 'CodeEntry (:doc |)
