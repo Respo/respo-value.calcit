@@ -52,9 +52,10 @@
         'read-states $ %{} 'CodeEntry (:doc "|Narrow the heterogeneous Respo store boundary to its state tree.")
           :code $ quote
             defn read-states (store)
-              unsafe-coerce
-                either (&map:get store :states) ({})
-                :: 'Map 'Dynamic 'Dynamic
+              let
+                  store-map $ unsafe-coerce store
+                    :: 'Map 'Tag $ :: 'Map 'Dynamic 'Dynamic
+                either (&map:get store-map :states) ({})
           :examples $ []
           :schema $ :: 'Fn
             {}
@@ -288,7 +289,9 @@
         'read-cursor $ %{} 'CodeEntry (:doc "|Narrow a Respo component-state cursor at the framework boundary.")
           :code $ quote
             defn read-cursor (states)
-              unsafe-coerce (&map:get states :cursor) (:: 'List 'Dynamic)
+              unsafe-coerce
+                either (&map:get states :cursor) (raise "|[respo-value/read-cursor] missing :cursor")
+                :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn
             {}
