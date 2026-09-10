@@ -10,24 +10,27 @@
       :defs $ {}
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-container (store)
+            defn comp-container (store)
               let
-                  states $ option:unwrap-or (get store :states) ({})
+                  states $ read-states store
                 div
                   {} $ :style layout/container
                   span $ {}
                   list-> ({})
-                    -> data-table $ map-indexed
-                      fn (idx pair)
-                        [] idx $ comp-section (>> states idx)
-                          option:unwrap $ first pair
-                          option:unwrap $ last pair
+                    ->
+                      range $ count data-table
+                      map $ fn (idx)
+                        let
+                            pair $ &list:nth data-table idx
+                          [] idx $ comp-section (>> states idx) (&list:nth pair 0) (&list:nth pair 1)
                   comp-inspect |States states nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] 'Dynamic
         'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-section (states hint value)
+            defn comp-section (states hint value)
               div
                 {} $ :style style-section
                 span $ {} (:inner-text hint) (:style widget/style-hint)
@@ -35,7 +38,9 @@
                   {} $ :style style-value
                   comp-value states value 1
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'String 'Dynamic
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def data-table $ [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a tag:" schema/a-tag) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
@@ -44,6 +49,18 @@
                 =< 8 nil
           :examples $ []
           :schema $ :: 'Dynamic
+        'read-states $ %{} 'CodeEntry (:doc "|Narrow the heterogeneous Respo store boundary to its state tree.")
+          :code $ quote
+            defn read-states (store)
+              unsafe-coerce
+                either (&map:get store :states) ({})
+                :: 'Map 'Dynamic 'Dynamic
+          :examples $ []
+          :schema $ :: 'Fn
+            {}
+              :args $ [] 'Dynamic
+              :features $ #{} :js-ffi
+              :return $ :: 'Map 'Dynamic 'Dynamic
         'style-section $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-section $ {} (:display |flex) (:font-family |Verdana) (:padding "|8px 8px")
@@ -69,33 +86,36 @@
       :defs $ {}
         'comp-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-bool (x)
+            defn comp-bool (x)
               <> (str x)
-                merge widget/literal $ {}
+                &merge widget/literal $ {}
                   :color $ hsl 320 100 40
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] 'Bool
         'comp-function $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-function () $ <> |fn
-              merge widget/literal $ {}
+            defn comp-function () $ <> |fn
+              &merge widget/literal $ {}
                 :color $ hsl 0 90 70
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ []
         'comp-list $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-list (states x level)
+            defn comp-list (states x level)
               let
-                  cursor $ option:unwrap-or (get states :cursor) nil
-                  state $ either
-                    option:unwrap-or (get states :data) ({})
+                  cursor $ read-cursor states
+                  state $ either (read-state-data states)
                     {} $ :folded? (< level 1)
-                  folded? $ option:unwrap-or (get state :folded?) (< level 1)
+                  folded? $ read-folded state (< level 1)
                 if
                   and folded? $ not (empty? x)
                   div
                     {}
-                      :style $ merge widget/structure style-folded
+                      :style $ &merge widget/structure style-folded
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <>
@@ -103,27 +123,28 @@
                       , widget/only-text
                   div
                     {}
-                      :style $ merge widget/structure layout/row
+                      :style $ &merge widget/structure layout/row
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <> (str |[]) widget/only-text
                     render-children states x level
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
         'comp-map $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-map (states x level)
+            defn comp-map (states x level)
               let
-                  cursor $ option:unwrap-or (get states :cursor) nil
-                  state $ either
-                    option:unwrap-or (get states :data) ({})
+                  cursor $ read-cursor states
+                  state $ either (read-state-data states)
                     {} $ :folded? (< level 1)
-                  folded? $ option:unwrap-or (get state :folded?) (< level 1)
+                  folded? $ read-folded state (< level 1)
                 if
                   and folded? $ not (empty? x)
                   div
                     {}
-                      :style $ merge widget/structure style-folded
+                      :style $ &merge widget/structure style-folded
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <>
@@ -131,42 +152,47 @@
                       , widget/only-text
                   div
                     {}
-                      :style $ merge widget/structure layout/row
+                      :style $ &merge widget/structure layout/row
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <> |{} widget/only-text
                     render-fields states x level
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
         'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-nil () $ <> |nil
-              merge widget/literal $ {}
+            defn comp-nil () $ <> |nil
+              &merge widget/literal $ {}
                 :color $ hsl 320 80 60
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ []
         'comp-number $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-number (x)
+            defn comp-number (x)
               <> (str x)
-                merge widget/literal $ {}
+                &merge widget/literal $ {}
                   :color $ hsl 200 80 50
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] 'Number
         'comp-set $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-set (states x level)
+            defn comp-set (states x level)
               let
-                  cursor $ option:unwrap-or (get states :cursor) nil
-                  state $ either
-                    option:unwrap-or (get states :data) ({})
+                  cursor $ read-cursor states
+                  state $ either (read-state-data states)
                     {} $ :folded? (< level 1)
-                  folded? $ option:unwrap-or (get state :folded?) (< level 1)
+                  folded? $ read-folded state (< level 1)
                 if
                   and folded? $ not (empty? x)
                   div
                     {}
-                      :style $ merge widget/structure style-folded
+                      :style $ &merge widget/structure style-folded
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <>
@@ -174,37 +200,43 @@
                       , widget/only-text
                   div
                     {}
-                      :style $ merge widget/structure layout/row
+                      :style $ &merge widget/structure layout/row
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <> (str |#{}) widget/only-text
-                    render-children states x level
+                    render-children states (&set:to-list x) level
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Set 'Dynamic) 'Number
         'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-string (x)
+            defn comp-string (x)
               span
                 {} $ :style
-                  merge widget/literal $ {}
+                  &merge widget/literal $ {}
                     :color $ hsl 110 20 56
                     :background-color $ hsl 30 100 97
                 <> "|\"" $ {}
                   :color $ hsl 0 0 40 0.2
                 <> x
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] 'String
         'comp-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-tag (x)
+            defn comp-tag (x)
               <> (str x)
-                merge widget/literal $ {}
+                &merge widget/literal $ {}
                   :color $ hsl 200 90 60
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] 'Tag
         'comp-value $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-value (states x level)
+            defn comp-value (states x level)
               let
                   level $ either level 1
                 cond
@@ -214,8 +246,7 @@
                   (string? x) (comp-string x)
                   (tag? x) (comp-tag x)
                   (fn? x) (comp-function)
-                  (or (= x true) (= x false))
-                    comp-bool x
+                  (bool? x) (comp-bool x)
                   (set? x) (comp-set states x level)
                   (list? x) (comp-list states x level)
                   (map? x) (comp-map states x level)
@@ -223,19 +254,21 @@
                     {} (:style widget/style-unknown)
                       :inner-text $ str-spaced |unknown (to-lispy-string x)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic 'Number
         'comp-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-vector (states x level)
+            defn comp-vector (states x level)
               let
-                  cursor $ option:unwrap (get states :cursor)
-                  state $ option:unwrap-or (get states :data) ({})
-                  folded? $ option:unwrap-or (get state :folded?) (>= level 1)
+                  cursor $ read-cursor states
+                  state $ read-state-data states
+                  folded? $ read-folded state (>= level 1)
                 if
                   and folded? $ not (empty? x)
                   div
                     {}
-                      :style $ merge widget/structure style-folded
+                      :style $ &merge widget/structure style-folded
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <>
@@ -243,44 +276,83 @@
                       , widget/only-text
                   div
                     {}
-                      :style $ merge widget/structure layout/row
+                      :style $ &merge widget/structure layout/row
                       :on-click $ fn (e d!)
                         d! cursor $ assoc state :folded? (not folded?)
                     <> (str |[]) widget/only-text
                     render-children states x level
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
+        'read-cursor $ %{} 'CodeEntry (:doc "|Narrow a Respo component-state cursor at the framework boundary.")
+          :code $ quote
+            defn read-cursor (states)
+              unsafe-coerce (&map:get states :cursor) (:: 'List 'Dynamic)
+          :examples $ []
+          :schema $ :: 'Fn
+            {}
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic)
+              :features $ #{} :js-ffi
+              :return $ :: 'List 'Dynamic
+        'read-folded $ %{} 'CodeEntry (:doc "|Narrow the optional folded flag stored in dynamic component state.")
+          :code $ quote
+            defn read-folded (state fallback)
+              unsafe-coerce
+                either (&map:get state :folded?) fallback
+                , 'Bool
+          :examples $ []
+          :schema $ :: 'Fn
+            {} (:return 'Bool)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Bool
+              :features $ #{} :js-ffi
+        'read-state-data $ %{} 'CodeEntry (:doc "|Narrow the dynamic component-state payload to the map used by this inspector.")
+          :code $ quote
+            defn read-state-data (states)
+              unsafe-coerce
+                either (&map:get states :data) ({})
+                :: 'Map 'Tag 'Dynamic
+          :examples $ []
+          :schema $ :: 'Fn
+            {}
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic)
+              :features $ #{} :js-ffi
+              :return $ :: 'Map 'Tag 'Dynamic
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-children (states xs level)
               list->
-                {} $ :style (merge widget/style-children layout/column)
-                -> xs $ map-indexed
-                  fn (index child)
-                    [] index $ comp-value (>> states index) child (dec level)
+                {} $ :style (&merge widget/style-children layout/column)
+                ->
+                  range $ count xs
+                  map $ fn (index)
+                    [] index $ comp-value (>> states index) (&list:nth xs index) (dec level)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
         'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-fields (states xs level)
-              list->
-                {} $ :style (merge widget/style-children layout/column)
-                -> xs (to-pairs) (&set:to-list)
-                  map-indexed $ fn (index field)
-                    []
-                      option:unwrap $ first field
-                      div
-                        {} $ :style layout/row
-                        comp-value states
-                          option:unwrap $ first field
-                          , 0
-                        =< 2 nil
-                        comp-value
-                          >> states $ option:unwrap (first field)
-                          option:unwrap $ last field
-                          dec level
+              let
+                  pairs $ &map:to-list xs
+                list->
+                  {} $ :style (&merge widget/style-children layout/column)
+                  ->
+                    range $ count pairs
+                    map $ fn (index)
+                      let
+                          field $ &list:nth pairs index
+                          field-key $ &list:nth field 0
+                        [] field-key $ div
+                          {} $ :style layout/row
+                          comp-value states field-key 0
+                          =< 2 nil
+                          comp-value (>> states field-key) (&list:nth field 1) (dec level)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Element)
+              :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
         'style-folded $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def style-folded $ {}
@@ -405,7 +477,7 @@
           :schema $ :: 'Dynamic
         'a-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def a-hash-map $ {,} :a 1 :b 2
+            def a-hash-map $ {} (:a 1) (:b 2)
           :examples $ []
           :schema $ :: 'Dynamic
         'a-hash-set $ %{} 'CodeEntry (:doc |)
@@ -420,14 +492,17 @@
           :schema $ :: 'Dynamic
         'a-mixed-data $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def a-mixed-data $ {,} :a
-              [] 1 2 $ {,} :c |str
+            def a-mixed-data $ {}
+              :a $ [] 1 2
+                {} $ :c |str
           :examples $ []
           :schema $ :: 'Dynamic
         'a-nested-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def a-nested-hash-map $ {,} :a 1 :b
-              {,} :c 3 :d ({,} :e 4) :f 5
+            def a-nested-hash-map $ {} (:a 1)
+              :b $ {} (:c 3)
+                :d $ {} (:e 4)
+                :f 5
           :examples $ []
           :schema $ :: 'Dynamic
         'a-nested-vector $ %{} 'CodeEntry (:doc |)
