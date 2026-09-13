@@ -3,10 +3,7 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |respo-value
   :entries $ {} $ :default
-    {} (:description |)
-      :init-fn 'respo-value.main/main!
-      :mode :native
-      :reload-fn 'respo-value.main/reload!
+    {} (:description |) (:init-fn 'respo-value.main/main!) (:mode :native) (:reload-fn 'respo-value.main/reload!)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/
       :type-slots $ {}
@@ -29,33 +26,22 @@
                         [] idx $ comp-section (>> states idx) (&list:nth pair 0) (&list:nth pair 1)
                 comp-inspect |States states nil
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Dynamic
         'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-section (states hint value)
             div
               {} $ :style style-section
-              span $ {} (:inner-text hint)
-                :style widget/style-hint
+              span $ {} (:inner-text hint) (:style widget/style-hint)
               div
                 {} $ :style style-value
                 comp-value states value 1
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'String 'Dynamic
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
-            [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a tag:" schema/a-tag) ([] "|a bool:" schema/a-bool)
-              [] "|a function:" schema/a-function
-              [] "|a list:" schema/a-list
-              [] "|a vector:" schema/a-vector
-              [] "|a hash-set:" schema/a-hash-set
-              [] "|a nested vector:" schema/a-nested-vector
-              [] "|a hash-map:" schema/a-hash-map
-              [] "|a nested hash-map:" schema/a-nested-hash-map
-              [] "|a mixed data:" schema/a-mixed-data
+            [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a tag:" schema/a-tag) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
               [] "|an element" $ div ({})
                 div $ {} $ :style style-section
                 =< 8 nil
@@ -99,16 +85,14 @@
             <> (str x)
               &merge widget/literal $ {} $ :color (hsl 320 100 40)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Bool
         'comp-function $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-function ()
             <> |fn $ &merge widget/literal $ {}
               :color $ hsl 0 90 70
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ []
         'comp-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-list (states x level)
@@ -135,8 +119,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
         'comp-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-map (states x level)
@@ -163,24 +146,21 @@
                   <> |{} widget/only-text
                   render-fields states x level
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
         'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-nil ()
             <> |nil $ &merge widget/literal $ {}
               :color $ hsl 320 80 60
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ []
         'comp-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-number (x)
             <> (str x)
               &merge widget/literal $ {} $ :color (hsl 200 80 50)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Number
         'comp-set $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-set (states x level)
@@ -207,8 +187,7 @@
                   <> (str |#{}) widget/only-text
                   render-children states (&set:to-list x) level
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Set 'Dynamic) 'Number
         'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-string (x)
@@ -220,16 +199,14 @@
               <> "|\"" $ {} $ :color (hsl 0 0 40 0.2)
               <> x
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'String
         'comp-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-tag (x)
             <> (str x)
               &merge widget/literal $ {} $ :color (hsl 200 90 60)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Tag
         'comp-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-value (states x level)
@@ -246,12 +223,10 @@
                 (set? x) (comp-set states x level)
                 (list? x) (comp-list states x level)
                 (map? x) (comp-map states x level)
-                true $ div $ {}
-                  :style widget/style-unknown
+                true $ div $ {} (:style widget/style-unknown)
                   :inner-text $ str-spaced |unknown $ to-lispy-string x
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic 'Number
         'comp-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-vector (states x level)
@@ -277,15 +252,13 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
         'read-cursor $ %{} 'CodeEntry
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
             unsafe-coerce
-              either (&map:get states :cursor)
-                raise "|[respo-value/read-cursor] missing :cursor"
+              either (&map:get states :cursor) (raise "|[respo-value/read-cursor] missing :cursor")
               :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -322,8 +295,7 @@
                 map $ fn (index)
                   [] index $ comp-value (>> states index) (&list:nth xs index) (dec level)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
         'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-fields (states xs level)
@@ -343,8 +315,7 @@
                         =< 2 nil
                         comp-value (>> states field-key) (&list:nth field 1) (dec level)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :return 'respo.schema/Element
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
         'style-folded $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-folded
@@ -371,13 +342,7 @@
           :schema $ :: 'Dynamic
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
-            {}
-              :dev-ui |http://localhost:8100/main-fonts.css
-              :release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css
-              :cdn-url |http://cdn.tiye.me/respo-value/
-              :title |Value
-              :icon |http://cdn.tiye.me/logo/respo.png
-              :storage-key |respo-value
+            {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |http://cdn.tiye.me/respo-value/) (:title |Value) (:icon |http://cdn.tiye.me/logo/respo.png) (:storage-key |respo-value)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
