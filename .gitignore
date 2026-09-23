@@ -2,8 +2,6 @@
 .compact-inc.cirru
 .calcit-error.cirru
 .calcit/
-.pnp.cjs
-.pnp.loader.mjs
 .yarn/
 
 js-out/

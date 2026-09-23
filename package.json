@@ -1,6 +1,6 @@
 {
   "version": "0.5.11",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.18.0",
   "scripts": {
     "check": "calcit calcit.cirru --check-only",
     "check:deprecated": "calcit calcit.cirru analyze deprecated",
