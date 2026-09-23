@@ -48,7 +48,7 @@ jobs:
         calcit calcit.cirru edit format
         git diff --exit-code -- calcit.cirru
         yarn check
-        calcit calcit.cirru analyze dynamic-methods --max 0
+        calcit calcit.cirru analyze dynamic-methods --format json | jq -e '.data.summary.findings == 0'
         yarn check:deprecated
         yarn check:quality
 
