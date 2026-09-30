@@ -9,11 +9,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: cos-upload-${{ github.repository }}-${{ github.event_name == 'pull_request' && 'pr' || 'production' }}
+  cancel-in-progress: false
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
 
@@ -28,9 +32,10 @@ jobs:
         corepack prepare yarn@4.18.0 --activate
         yarn --version
 
-    - uses: calcit-lang/setup-calcit@704b3f5cd6f9ce3bd1e0c926dbdd1d181adb8180 # v1.4.0
+    - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0
       with:
         tools: calcit,caps
+        caps-version: "0.1.1"
 
     - name: Install dependencies
       run: |
@@ -45,18 +50,70 @@ jobs:
 
     - name: Validate Calcit snapshot and types
       run: |
+        set -euo pipefail
+        test "$(calcit --version)" = "0.27.0"
+        test ! -e compact.cirru
+        test ! -e package.cirru
         calcit calcit.cirru edit format
         git diff --exit-code -- calcit.cirru
+        calcit fix --workflow strict --verify --format edn
         yarn check
+        calcit analyze check-public \
+          --ns respo-value.main --ns respo-value.comp.value --ns respo-value.comp.container \
+          --ns respo-value.config --ns respo-value.schema \
+          --ns respo-value.style.layout --ns respo-value.style.widget --summary-only --format json
         calcit calcit.cirru analyze dynamic-methods --format json | jq -e '.data.summary.findings == 0'
         yarn check:deprecated
         yarn check:quality
 
     - name: Validate documentation
-      run: calcit calcit.cirru docs check-md README.md --entry calcit.cirru --failures-only
+      run: calcit docs check-md README.md --snapshot calcit.cirru --failures-only
 
     - name: Build browser client
-      run: yarn build:js
+      id: asset-path
+      env:
+        CDN_ORIGIN: https://cos-sh.tiye.me
+      run: |
+        set -euo pipefail
+        if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+          asset_prefix="${GITHUB_REPOSITORY}/pr/"
+        else
+          asset_prefix="${GITHUB_REPOSITORY}/"
+        fi
+        export VITE_BASE_URL="${CDN_ORIGIN}/${asset_prefix}"
+        echo "prefix=${asset_prefix}" >> "$GITHUB_OUTPUT"
+        echo "base-url=${VITE_BASE_URL}" >> "$GITHUB_OUTPUT"
+        yarn build:js
+        node --test scripts/value-regression.test.mjs
+
+    - name: Check COS credentials
+      id: cos-credentials
+      if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+      env:
+        COS_BUCKET: ${{ secrets.COS_BUCKET }}
+        COS_SECRET_ID: ${{ secrets.COS_SECRET_ID }}
+        COS_SECRET_KEY: ${{ secrets.COS_SECRET_KEY }}
+      run: |
+        if [[ -n "$COS_BUCKET" && -n "$COS_SECRET_ID" && -n "$COS_SECRET_KEY" ]]; then
+          echo "available=true" >> "$GITHUB_OUTPUT"
+        elif [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+          echo "::warning::COS upload skipped: configure COS_BUCKET, COS_SECRET_ID, COS_SECRET_KEY."
+        else
+          echo "::error::COS credentials are required for production deployment."
+          exit 1
+        fi
+
+    - name: Upload and verify frontend assets on COS
+      if: steps.cos-credentials.outputs.available == 'true'
+      uses: worktools/cos-upload-action@17e6d213fe9f6772a6090a13c8ba044cd6cbcb09 # v1.1.1
+      with:
+        source-dir: dist
+        bucket: ${{ secrets.COS_BUCKET }}
+        region: ap-shanghai
+        prefix: ${{ steps.asset-path.outputs.prefix }}
+        public-base-url: ${{ steps.asset-path.outputs.base-url }}
+        secret-id: ${{ secrets.COS_SECRET_ID }}
+        secret-key: ${{ secrets.COS_SECRET_KEY }}
 
     - name: Verify deployment host key
       run: |

@@ -35,7 +35,7 @@
       :typeNone 0
       :typeNotFull 1
       :unresolved 0
-      :unsafeCoerce 1
+      :unsafeCoerce 0
     |respo-value.comp.container/style-section $ {} (:codeDynamic 0)
       :codeNil 0
       :declaredOptional 0
@@ -107,7 +107,7 @@
       :typeNone 0
       :typeNotFull 1
       :unresolved 0
-      :unsafeCoerce 1
+      :unsafeCoerce 0
     |respo-value.comp.value/read-folded $ {} (:codeDynamic 0)
       :codeNil 0
       :declaredOptional 0
@@ -116,7 +116,7 @@
       :typeNone 0
       :typeNotFull 1
       :unresolved 0
-      :unsafeCoerce 1
+      :unsafeCoerce 0
     |respo-value.comp.value/read-state-data $ {} (:codeDynamic 0)
       :codeNil 0
       :declaredOptional 0
@@ -125,7 +125,7 @@
       :typeNone 0
       :typeNotFull 1
       :unresolved 0
-      :unsafeCoerce 1
+      :unsafeCoerce 0
     |respo-value.comp.value/render-children $ {} (:codeDynamic 0)
       :codeNil 0
       :declaredOptional 0
@@ -188,15 +188,6 @@
       :typeNone 0
       :typeNotFull 1
       :unresolved 1
-      :unsafeCoerce 0
-    |respo-value.main/mount-target $ {} (:codeDynamic 0)
-      :codeNil 0
-      :declaredOptional 0
-      :deprecatedCalls 0
-      :schemaDynamic 0
-      :typeNone 0
-      :typeNotFull 1
-      :unresolved 0
       :unsafeCoerce 0
     |respo-value.main/render-app! $ {} (:codeDynamic 0)
       :codeNil 0
@@ -420,9 +411,9 @@
     :deprecatedCalls 0
     :schemaDynamic 61
     :typeNone 0
-    :typeNotFull 18
+    :typeNotFull 17
     :unresolved 65
-    :unsafeCoerce 4
+    :unsafeCoerce 0
   :scope $ {} (:includeDependencies false)
     :namespace nil
     :namespacePrefix nil
