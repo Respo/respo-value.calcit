@@ -3,7 +3,7 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |respo-value
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'respo-value.main/main!) (:mode :native) (:reload-fn 'respo-value.main/reload!)
+    {} (:description |) (:init-fn 'respo-value.main/main!) (:mode :js) (:reload-fn 'respo-value.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/
       :type-slots $ {}
@@ -51,8 +51,10 @@
           :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
           :code $ quote $ defn read-states (store)
             let
-                store-map $ unsafe-coerce store $ :: 'Map 'Tag (:: 'Map 'Dynamic 'Dynamic)
-              either (&map:get store-map :states) ({})
+                store-map $ decode-map-as store $ :: 'Map 'Tag 'Dynamic
+              decode-map-as
+                .unwrap-or (get store-map :states) ({})
+                :: 'Map 'Dynamic 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic
@@ -107,7 +109,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
                     str |[]~ $ count x
                     , widget/only-text
@@ -115,7 +117,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
@@ -134,7 +136,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
                     str |{}~ $ count x
                     , widget/only-text
@@ -142,7 +144,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> |{} widget/only-text
                   render-fields states x level
           :examples $ []
@@ -175,7 +177,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
                     str |#{}~ $ count x
                     , widget/only-text
@@ -183,7 +185,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> (str |#{}) widget/only-text
                   render-children states (&set:to-list x) level
           :examples $ []
@@ -240,7 +242,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
                     str |[]~ $ count x
                     , widget/only-text
@@ -248,7 +250,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! cursor $ assoc state :folded? $ not folded?
+                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
@@ -257,8 +259,8 @@
         'read-cursor $ %{} 'CodeEntry
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
-            unsafe-coerce
-              either (&map:get states :cursor) (raise "|[respo-value/read-cursor] missing :cursor")
+            decode-map-as
+              option:unwrap $ get states :cursor
               :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -268,9 +270,10 @@
         'read-folded $ %{} 'CodeEntry
           :doc "|Narrow the optional folded flag stored in dynamic component state."
           :code $ quote $ defn read-folded (state fallback)
-            unsafe-coerce
-              either (&map:get state :folded?) fallback
-              , 'Bool
+            match (get state :folded?)
+              (:some value)
+                decode-map-as (either value fallback) 'Bool
+              (:none) fallback
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Bool
@@ -278,9 +281,12 @@
         'read-state-data $ %{} 'CodeEntry
           :doc "|Narrow the dynamic component-state payload to the map used by this inspector."
           :code $ quote $ defn read-state-data (states)
-            unsafe-coerce
-              either (&map:get states :data) ({})
-              :: 'Map 'Tag 'Dynamic
+            match (get states :data)
+              (:some value)
+                decode-map-as
+                  either value $ {}
+                  :: 'Map 'Tag 'Dynamic
+              (:none) ({})
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] $ :: 'Map 'Dynamic 'Dynamic
@@ -371,9 +377,12 @@
             :args $ []
             :features $ #{} :js-ffi
         'mount-target $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def mount-target (query-selector |.app)
+          :code $ quote $ defn mount-target ()
+            option:unwrap $ query-selector |.app
           :examples $ []
-          :schema $ :: 'JsNullish 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'js-ffi.browser/DomElementHost)
+            :args $ []
+            :features $ #{} :js-ffi
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
@@ -389,7 +398,7 @@
             :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! (renderer)
-            renderer mount-target (comp-container @*store) dispatch!
+            renderer (mount-target) (comp-container @*store) dispatch!
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic

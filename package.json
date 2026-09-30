@@ -5,13 +5,13 @@
     "check": "calcit calcit.cirru --check-only",
     "check:deprecated": "calcit calcit.cirru analyze deprecated",
     "check:quality": "calcit calcit.cirru analyze quality --baseline config/calcit-quality.cirru",
-    "build:js": "calcit calcit.cirru js && vite build --base=./"
+    "build:js": "calcit calcit.cirru js && vite build --base=${VITE_BASE_URL:-/}"
   },
   "dependencies": {
-    "@calcit/procs": "0.19.1"
+    "@calcit/procs": "0.27.0"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
-    "vite": "^4.4.9"
+    "vite": "8.3.1"
   }
 }
