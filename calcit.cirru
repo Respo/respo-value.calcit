@@ -371,7 +371,7 @@
           :code $ quote $ defn main! ()
             if ssr? $ render-app! realize-ssr!
             render-app! render!
-            add-watch *store :rerender $ fn (prev store) (render-app! render!)
+            add-watch! *store :rerender $ fn (prev store) (render-app! render!)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -386,8 +386,8 @@
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
-              do (remove-watch *store :renderer) (clear-cache!)
-                add-watch *store :rerender $ fn (prev store) (render-app! render!)
+              do (remove-watch! *store :rerender) (clear-cache!)
+                add-watch! *store :rerender $ fn (prev store) (render-app! render!)
                 render-app! render!
                 hud! |ok~ |Ok
               hud! |error build-errors
