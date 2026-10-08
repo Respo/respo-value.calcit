@@ -1,5 +1,5 @@
 {
-  "version": "0.5.14",
+  "version": "0.5.15",
   "packageManager": "yarn@4.18.0",
   "scripts": {
     "check": "calcit calcit.cirru --check-only",
@@ -8,7 +8,7 @@
     "build:js": "calcit calcit.cirru js && vite build --base=${VITE_BASE_URL:-/}"
   },
   "dependencies": {
-    "@calcit/procs": "0.29.0-alpha.6"
+    "@calcit/procs": "0.29.0-alpha.19"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",

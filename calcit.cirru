@@ -364,6 +364,7 @@
             let
                 store $ updater @*store op $ generate-id!
               reset! *store store
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic
