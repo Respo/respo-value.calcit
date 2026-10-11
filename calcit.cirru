@@ -367,7 +367,7 @@
               , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
+            :args $ [] 'Enum
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if ssr? $ render-app! realize-ssr!
@@ -415,7 +415,7 @@
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
           :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic 'String
+            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Enum 'String
             :return $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.main

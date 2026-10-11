@@ -52,19 +52,19 @@ jobs:
     - name: Validate Calcit snapshot and types
       run: |
         set -euo pipefail
-        test "$(calcit --version)" = "0.29.0-alpha.19"
+        test "$(calcit --version)" = "0.29.0"
         test ! -e compact.cirru
         test ! -e package.cirru
         calcit calcit.cirru edit format
         git diff --exit-code -- calcit.cirru
         yarn check
-        calcit analyze check-public \
+        calcit --check-only \
           --ns respo-value.main --ns respo-value.comp.value --ns respo-value.comp.container \
           --ns respo-value.config --ns respo-value.schema \
           --ns respo-value.style.layout --ns respo-value.style.widget --summary-only --format json
-        calcit calcit.cirru analyze dynamic-methods --format json | jq -e '.data.summary.findings == 0'
+        calcit calcit.cirru analyze weak-types --only dynamic-method --format json | jq -e '.data.summary.findings == 0'
         yarn check:deprecated
-        yarn check:quality
+        calcit calcit.cirru analyze weak-types --only coverage --summary-only
 
     - name: Validate documentation
       run: calcit docs check-md README.md --snapshot calcit.cirru --failures-only
