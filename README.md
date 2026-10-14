@@ -18,7 +18,7 @@ last argument is "default expanding level", set a larger value to expand structu
 
 Calcit 与 `@calcit/procs` 固定为已发布的 `0.29.3`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
-当前准备模块 `0.5.17`，依赖已发布的 Respo `0.16.118`，其传递 JS-FFI 为 `0.2.2`；
+当前准备模块 `0.5.18`，依赖已发布的 Respo `0.16.119`，其传递 JS-FFI 为 `0.2.2`；
 旧版本标签保持原状，合并及发布新标签前不能以工作分支替代正式依赖。
 
 ```sh
