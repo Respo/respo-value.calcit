@@ -16,9 +16,9 @@ last argument is "default expanding level", set a larger value to expand structu
 
 ### 开发与验证
 
-Calcit 与 `@calcit/procs` 固定为已发布的 `0.29.0`，使用 Node.js 24、
+Calcit 与 `@calcit/procs` 固定为已发布的 `0.29.3`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
-当前准备模块 `0.5.16`，依赖已发布的 Respo `0.16.114`，其传递 JS-FFI 为 `0.2.1`；
+当前准备模块 `0.5.17`，依赖已发布的 Respo `0.16.118`，其传递 JS-FFI 为 `0.2.2`；
 旧版本标签保持原状，合并及发布新标签前不能以工作分支替代正式依赖。
 
 ```sh
@@ -47,7 +47,7 @@ CI 保留严格入口、公共 API、旧 API 诊断、动态分派门禁和原�
 数据展示组件仍接受异构值，不把展示任意值的业务边界虚假收窄。
 删除将被 Calcit 退役的质量预算配置和命令；严格检查仍是正确性门禁，
 覆盖率是诊断视图，不冒充强制预算门禁。公开 API、业务测试与部署规则保持不变。
-Yarn 只为已验证的 `@calcit/procs@0.29.0` 和
+Yarn 只为已验证的 `@calcit/procs@0.29.3` 和
 `@calcit/finger-vec@0.1.1` 配置精确允许项，保留其他依赖的发布时间隔离。
 完整验证范围见[迁移记录](history/20261005-published-alpha6.md)。
 
