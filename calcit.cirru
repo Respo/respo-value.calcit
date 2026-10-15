@@ -72,14 +72,14 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.container
           :require
-            [] respo.util.format :refer $ [] hsl
-            [] respo-value.comp.value :refer $ [] comp-value
-            [] respo-value.schema :as schema
-            [] respo.comp.space :refer $ [] =<
-            [] respo.comp.inspect :refer $ [] comp-inspect
-            [] respo.core :refer $ [] defcomp <> div span list-> >>
-            [] respo-value.style.layout :as layout
-            [] respo-value.style.widget :as widget
+            respo.util.format :refer $ hsl
+            respo-value.comp.value :refer $ comp-value
+            respo-value.schema :as schema
+            respo.comp.space :refer $ =<
+            respo.comp.inspect :refer $ comp-inspect
+            respo.core :refer $ defcomp <> div span list-> >>
+            respo-value.style.layout :as layout
+            respo-value.style.widget :as widget
     'respo-value.comp.value $ %{} 'FileEntry
       :defs $ {}
         'comp-bool $ %{} 'CodeEntry (:doc |)
