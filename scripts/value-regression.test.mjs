@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import * as clt from '../js-out/calcit.core.mjs';
 import { comp_value, comp_list, comp_vector, comp_set, comp_map, read_cursor, read_folded, read_state_data } from '../js-out/respo-value.comp.value.mjs';
-import { read_states } from '../js-out/respo-value.comp.container.mjs';
+import { comp_container, read_states } from '../js-out/respo-value.comp.container.mjs';
 import { make_string } from '../js-out/respo.render.html.mjs';
 
 const t = clt.init_tags(['cursor', 'data', 'states', 'value', 'folded?', 'event', 'click', 'example']);
@@ -39,6 +39,19 @@ test('state payload permits missing or null data, but rejects non-map data', () 
 test('primitive and nested collection values render through the public API', () => {
   for (const [value, expected] of [[null, /nil/], [123, /123/], ['sample', /sample/], [false, /false/], [list(1, list(2, 3)), /\[\]/], [map(t.example, list(1, 2)), /example/]]) {
     assert.match(make_string(comp_value(states, value, 2)), expected);
+  }
+});
+
+test('typed demo entries render every original label without changing their order', () => {
+  const html = make_string(comp_container(map(t.states, map())));
+  const labels = ['a nil:', 'a number:', 'a string:', 'a tag:', 'a bool:',
+    'a function:', 'a list:', 'a vector:', 'a hash-set:', 'a nested vector:',
+    'a hash-map:', 'a nested hash-map:', 'a mixed data:', 'an element'];
+  let previous = -1;
+  for (const label of labels) {
+    const index = html.indexOf(label);
+    assert.ok(index > previous, `missing or reordered demo label: ${label}`);
+    previous = index;
   }
 });
 
