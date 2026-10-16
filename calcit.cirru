@@ -10,8 +10,24 @@
   :files $ {}
     'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
+        'DemoEntry $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct DemoEntry (:label 'String) (:value 'Dynamic)
+          :examples $ []
+          :schema $ :: 'StructDef
+          :tests $ [] $ %{} 'TestEntry (:name |preserves-label-and-falsy-payloads)
+            :code $ quote $ let
+                nil-entry $ DemoEntry :label |nil :value nil
+                false-entry $ DemoEntry :label |false :value false
+                zero-entry $ DemoEntry :label |zero :value 0
+                empty-entry $ DemoEntry :label |empty :value |
+              assert= |nil $ :label nil-entry
+              assert= nil $ :value nil-entry
+              assert= false $ :value false-entry
+              assert= 0 $ :value zero-entry
+              assert= | $ :value empty-entry
+            :tags $ #{} :unit :value-boundary
         'comp-container $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn comp-container (store)
+          :code $ quote $ defcomp comp-container (store)
             let
                 states $ read-states store
               div
@@ -22,11 +38,11 @@
                     range $ count data-table
                     map $ fn (idx)
                       let
-                          pair $ &list:nth data-table idx
-                        [] idx $ comp-section (>> states idx) (&list:nth pair 0) (&list:nth pair 1)
+                          entry $ &list:nth data-table idx
+                        [] idx $ comp-section (>> states idx) (:label entry) (:value entry)
                 comp-inspect |States states nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Dynamic
         'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-section (states hint value)
@@ -41,12 +57,12 @@
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'String 'Dynamic
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
-            [] ([] "|a nil:" nil) ([] "|a number:" schema/a-number) ([] "|a string:" schema/a-string) ([] "|a tag:" schema/a-tag) ([] "|a bool:" schema/a-bool) ([] "|a function:" schema/a-function) ([] "|a list:" schema/a-list) ([] "|a vector:" schema/a-vector) ([] "|a hash-set:" schema/a-hash-set) ([] "|a nested vector:" schema/a-nested-vector) ([] "|a hash-map:" schema/a-hash-map) ([] "|a nested hash-map:" schema/a-nested-hash-map) ([] "|a mixed data:" schema/a-mixed-data)
-              [] "|an element" $ div ({})
+            [] (DemoEntry :label "|a nil:" :value nil) (DemoEntry :label "|a number:" :value schema/a-number) (DemoEntry :label "|a string:" :value schema/a-string) (DemoEntry :label "|a tag:" :value schema/a-tag) (DemoEntry :label "|a bool:" :value schema/a-bool) (DemoEntry :label "|a function:" :value schema/a-function) (DemoEntry :label "|a list:" :value schema/a-list) (DemoEntry :label "|a vector:" :value schema/a-vector) (DemoEntry :label "|a hash-set:" :value schema/a-hash-set) (DemoEntry :label "|a nested vector:" :value schema/a-nested-vector) (DemoEntry :label "|a hash-map:" :value schema/a-hash-map) (DemoEntry :label "|a nested hash-map:" :value schema/a-nested-hash-map) (DemoEntry :label "|a mixed data:" :value schema/a-mixed-data)
+              DemoEntry :label "|an element" :value $ div ({})
                 div $ {} $ :style style-section
                 =< 8 nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'List 'respo-value.comp.container/DemoEntry
         'read-states $ %{} 'CodeEntry
           :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
           :code $ quote $ defn read-states (store)
@@ -359,6 +375,12 @@
           :code $ quote $ defref *store schema/store
           :examples $ []
           :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
+        'deliver-op! $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn deliver-op! (op)
+            dispatch! $ decode-op op
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ [] 'Dynamic
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             let
@@ -381,7 +403,7 @@
           :code $ quote $ defn mount-target ()
             option:unwrap $ query-selector |.app
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'js-ffi.browser/DomElementHost)
+          :schema $ :: 'Fn $ {} (:return 'respo.dom/DomElement)
             :args $ []
             :features $ #{} :js-ffi
         'reload! $ %{} 'CodeEntry (:doc |)
@@ -399,34 +421,31 @@
             :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! (renderer)
-            renderer (mount-target) (comp-container @*store) dispatch!
+            renderer (mount-target) (comp-container @*store) deliver-op!
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Fn
+              {} (:return 'Unit)
+                :args $ [] 'respo.dom/DomElement 'respo.schema/Component $ :: 'Fn
+                  {} (:return 'Unit)
+                    :args $ [] 'Dynamic
+                :features $ #{} :js-ffi
+            :features $ #{} :js-ffi
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
             option:some? $ query-selector |meta.respo-ssr
           :examples $ []
           :schema $ :: 'Bool
-        'updater $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn updater (store op op-id) (; println store op)
-            match op
-              (:states cursor s) (update-states store cursor s)
-              _ $ do (eprintln "|Unknown op:" op) store
-          :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Enum 'String
-            :return $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.main
           :require
             respo.core :refer $ render! clear-cache! realize-ssr!
-            respo.cursor :refer $ update-states
             respo-value.comp.container :refer $ comp-container
             respo-value.schema :as schema
-            |./calcit.build-errors :default build-errors
             |bottom-tip :default hud!
-            js-ffi.browser :refer $ query-selector
+            |./calcit.build-errors.mjs :default build-errors
+            respo-value.updater :refer $ updater decode-op
+            respo.ffi.browser :refer $ query-selector
     'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
         'a-bool $ %{} 'CodeEntry (:doc |)
@@ -435,9 +454,15 @@
           :schema $ :: 'Dynamic
         'a-function $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-function
-            fn (x) (+ x 1)
+            fn (x)
+              hint-fn $ {}
+                :args $ [] 'Number
+                :return 'Number
+              + x 1
           :examples $ []
-          :schema $ :: 'Dynamic
+          :tests $ [] $ %{} 'TestEntry (:name |increments-a-number)
+            :code $ quote $ assert= 2 (a-function 1)
+            :tags $ #{} :alpha4-boundary :unit
         'a-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-hash-map
             {} (:a 1) (:b 2)
@@ -570,3 +595,86 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.style.widget
           :require $ respo.util.format :refer $ hsl
+    'respo-value.updater $ %{} 'FileEntry
+      :defs $ {}
+        'decode-op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-op (op)
+            if (enum? op) op $ raise "|[Value] expected an Enum operation"
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Enum)
+            :args $ [] 'Dynamic
+          :tests $ []
+            %{} 'TestEntry (:name |preserves-existing-enum-operations)
+              :code $ quote $ let
+                  op $ :: :states ([] :value |branch 7) nil
+                is= op $ decode-op op
+                is= (:: :unknown)
+                  decode-op $ :: :unknown
+              :tags $ #{} :unit :value-boundary
+            %{} 'TestEntry (:name |rejects-non-enum-deliveries)
+              :code $ quote $ do
+                is-throws $ decode-op 123
+                is-throws $ decode-op :states
+              :tags $ #{} :unit :value-boundary
+        'updater $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn updater (store op op-id) (; println store op)
+            match op
+              (:states cursor s)
+                decode-map-as
+                  update-states store
+                    decode-map-as cursor $ :: 'List 'Dynamic
+                    , s
+                  :: 'Map 'Tag 'Dynamic
+              _ $ do (eprintln "|Unknown op:" op) store
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Enum 'String
+            :return $ :: 'Map 'Tag 'Dynamic
+          :tests $ []
+            %{} 'TestEntry (:name |preserves-mixed-cursor-and-store)
+              :code $ quote $ let
+                  store $ {}
+                    :states $ {}
+                    :value |unchanged
+                  result $ updater store
+                    :: :states ([] :value |branch 7) 42
+                    , |test
+                assert= (%some 42)
+                  get-in result $ [] :states :value |branch 7 :data
+                assert= (%some |unchanged) (get result :value)
+              :tags $ #{} :alpha4-boundary :unit
+            %{} 'TestEntry (:name |preserves-root-nil-payload)
+              :code $ quote $ assert=
+                {} $ :states $ {} (:data nil)
+                updater
+                  {} $ :states $ {}
+                  :: :states ([]) nil
+                  , |test
+              :tags $ #{} :alpha4-boundary :unit
+            %{} 'TestEntry (:name |rejects-non-list-cursor)
+              :code $ quote $ assert= "|decode-map-as failed at $: expected list, got number"
+                try
+                  do
+                    updater
+                      {} $ :states $ {}
+                      :: :states 123 nil
+                      , |test
+                    , |unexpected-success
+                  fn (message)
+                    hint-fn $ {}
+                      :args $ [] 'String
+                      :return 'String
+                    , message
+              :tags $ #{} :alpha4-boundary :unit
+            %{} 'TestEntry (:name |preserves-unknown-operation)
+              :code $ quote $ let
+                  store $ {}
+                    :states $ {}
+                    :value |unchanged
+                assert= store $ updater store (:: :unknown) |test
+              :tags $ #{} :alpha4-boundary :unit
+      :ns $ %{} 'NsEntry (:doc |)
+        :code $ quote $ ns respo-value.updater
+          :require
+            respo.cursor :refer $ update-states
+            calcit.test :refer $ is= is-throws
