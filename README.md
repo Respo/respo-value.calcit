@@ -16,10 +16,10 @@ last argument is "default expanding level", set a larger value to expand structu
 
 ### 开发与验证
 
-Calcit 与 `@calcit/procs` 固定为已完整发布的配对预览版 `0.30.1-alpha.5`，使用 Node.js 24、
+Calcit 与 `@calcit/procs` 固定为正式配对版 `0.30.1`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
-使用者影响：候选 Value `0.5.21` 同步已发布的 Respo `0.16.123` 兼容维护版，其传递 JS-FFI
-为正式 `0.2.4`。Calcit 源码与正式 `0.5.20` 相同；展示、展开/折叠和状态 API 不变，异构值展示边界继续保留。不包含 Respo main 的 0.17 破坏性接口。正式 Calcit 0.30.1 CLI/npm 发布配对尚未完成，不能只升级一端。
+使用者影响：尚未发布的 Value `0.5.21` 候选同步已发布的 Respo `0.16.124` 兼容维护版，其传递 JS-FFI
+为正式 `0.2.5`。Calcit 源码与正式 `0.5.20` 相同；展示、展开/折叠和状态 API 不变，异构值展示边界继续保留。不包含 Respo main 的 0.17 破坏性接口。正式 Calcit `0.30.1` CLI 与 JS runtime 必须一起升级。既有候选尚无 tag，因此沿用 `0.5.21`，不为工具链修订增加额外版本。
 应用需协调其他模块的 Respo / JS-FFI 版本，不能只更新根 pin 或关闭 Caps 严格解析。
 旧版本标签保持原状，候选通过原门禁并正式发布前不能用工作分支替代正式依赖。
 
@@ -58,8 +58,8 @@ Tag/String/Number cursor、nil payload 和未知 Enum 操作的行为保持不�
 原来的热更新行为，并用明确的 `.mjs` 扩展名引用构建错误模块。
 删除将被 Calcit 退役的质量预算配置和命令；严格检查仍是正确性门禁，
 覆盖率是诊断视图，不冒充强制预算门禁。公开 API、业务测试与部署规则保持不变。
-Yarn 仅在原隔离配置中为 `@calcit/procs@0.30.1-alpha.4` 和
-`@calcit/finger-vec@0.1.1` 配置精确允许项，保留其他依赖的发布时间隔离。
+Yarn 移除已过期的 procs alpha.4 发布时间例外，保留原 `@calcit/finger-vec@0.1.1`
+精确允许项与其他依赖的发布时间隔离，不增加新的安全豁免。
 完整验证范围见[迁移记录](history/20261005-published-alpha6.md)。
 
 https://github.com/calcit-lang/respo-calcit-workflow
