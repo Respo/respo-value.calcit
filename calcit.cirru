@@ -101,13 +101,13 @@
         'comp-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-bool (x)
             <> (str x)
-              &merge widget/literal $ {} $ :color (hsl 320 100 40)
+              merge widget/literal $ {} $ :color (hsl 320 100 40)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Bool
         'comp-function $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-function ()
-            <> |fn $ &merge widget/literal $ {}
+            <> |fn $ merge widget/literal $ {}
               :color $ hsl 0 90 70
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
@@ -123,7 +123,7 @@
                 and folded? $ not $ empty? x
                 div
                   {}
-                    :style $ &merge widget/structure style-folded
+                    :style $ merge widget/structure style-folded
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
@@ -131,7 +131,7 @@
                     , widget/only-text
                 div
                   {}
-                    :style $ &merge widget/structure layout/row
+                    :style $ merge widget/structure layout/row
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> (str |[]) widget/only-text
@@ -150,7 +150,7 @@
                 and folded? $ not $ empty? x
                 div
                   {}
-                    :style $ &merge widget/structure style-folded
+                    :style $ merge widget/structure style-folded
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
@@ -158,7 +158,7 @@
                     , widget/only-text
                 div
                   {}
-                    :style $ &merge widget/structure layout/row
+                    :style $ merge widget/structure layout/row
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> |{} widget/only-text
@@ -168,7 +168,7 @@
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
         'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-nil ()
-            <> |nil $ &merge widget/literal $ {}
+            <> |nil $ merge widget/literal $ {}
               :color $ hsl 320 80 60
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
@@ -176,7 +176,7 @@
         'comp-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-number (x)
             <> (str x)
-              &merge widget/literal $ {} $ :color (hsl 200 80 50)
+              merge widget/literal $ {} $ :color (hsl 200 80 50)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Number
@@ -191,7 +191,7 @@
                 and folded? $ not $ empty? x
                 div
                   {}
-                    :style $ &merge widget/structure style-folded
+                    :style $ merge widget/structure style-folded
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
@@ -199,7 +199,7 @@
                     , widget/only-text
                 div
                   {}
-                    :style $ &merge widget/structure layout/row
+                    :style $ merge widget/structure layout/row
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> (str |#{}) widget/only-text
@@ -210,7 +210,7 @@
         'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-string (x)
             span
-              {} $ :style $ &merge widget/literal
+              {} $ :style $ merge widget/literal
                 {}
                   :color $ hsl 110 20 56
                   :background-color $ hsl 30 100 97
@@ -222,7 +222,7 @@
         'comp-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-tag (x)
             <> (str x)
-              &merge widget/literal $ {} $ :color (hsl 200 90 60)
+              merge widget/literal $ {} $ :color (hsl 200 90 60)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] 'Tag
@@ -256,7 +256,7 @@
                 and folded? $ not $ empty? x
                 div
                   {}
-                    :style $ &merge widget/structure style-folded
+                    :style $ merge widget/structure style-folded
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <>
@@ -264,7 +264,7 @@
                     , widget/only-text
                 div
                   {}
-                    :style $ &merge widget/structure layout/row
+                    :style $ merge widget/structure layout/row
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ assoc state :folded? (not folded?)
                   <> (str |[]) widget/only-text
@@ -276,7 +276,7 @@
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
             decode-map-as
-              option:unwrap $ get states :cursor
+              .unwrap $ get states :cursor
               :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -311,7 +311,7 @@
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (states xs level)
             list->
-              {} $ :style $ &merge widget/style-children layout/column
+              {} $ :style $ merge widget/style-children layout/column
               ->
                 range $ count xs
                 map $ fn (index)
@@ -324,7 +324,7 @@
             let
                 pairs $ &map:to-list xs
               list->
-                {} $ :style $ &merge widget/style-children layout/column
+                {} $ :style $ merge widget/style-children layout/column
                 ->
                   range $ count pairs
                   map $ fn (index)
@@ -366,7 +366,7 @@
           :code $ quote $ def site
             {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |http://cdn.tiye.me/respo-value/) (:title |Value) (:icon |http://cdn.tiye.me/logo/respo.png) (:storage-key |respo-value)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Map 'Tag 'String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.config
     'respo-value.main $ %{} 'FileEntry
@@ -401,7 +401,7 @@
             :features $ #{} :js-ffi
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
-            option:unwrap $ query-selector |.app
+            .unwrap $ query-selector |.app
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.dom/DomElement)
             :args $ []
@@ -433,7 +433,7 @@
             :features $ #{} :js-ffi
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
-            option:some? $ query-selector |meta.respo-ssr
+            .some? $ query-selector |meta.respo-ssr
           :examples $ []
           :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
@@ -460,6 +460,8 @@
                 :return 'Number
               + x 1
           :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Number)
+            :args $ [] 'Number
           :tests $ [] $ %{} 'TestEntry (:name |increments-a-number)
             :code $ quote $ assert= 2 (a-function 1)
             :tags $ #{} :alpha4-boundary :unit
@@ -639,9 +641,9 @@
                   result $ updater store
                     :: :states ([] :value |branch 7) 42
                     , |test
-                assert= (%some 42)
+                assert= (Option :some 42)
                   get-in result $ [] :states :value |branch 7 :data
-                assert= (%some |unchanged) (get result :value)
+                assert= (Option :some |unchanged) (get result :value)
               :tags $ #{} :alpha4-boundary :unit
             %{} 'TestEntry (:name |preserves-root-nil-payload)
               :code $ quote $ assert=
