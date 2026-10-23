@@ -18,8 +18,11 @@ last argument is "default expanding level", set a larger value to expand structu
 
 Calcit 与 `@calcit/procs` 固定为正式配对版 `0.30.1`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
-使用者影响：尚未发布的 Value `0.5.21` 候选同步已发布的 Respo `0.16.124` 兼容维护版，其传递 JS-FFI
-为正式 `0.2.5`。Calcit 源码与正式 `0.5.20` 相同；展示、展开/折叠和状态 API 不变，异构值展示边界继续保留。不包含 Respo main 的 0.17 破坏性接口。正式 Calcit `0.30.1` CLI 与 JS runtime 必须一起升级。既有候选尚无 tag，因此沿用 `0.5.21`，不为工具链修订增加额外版本。
+使用者影响：Value `0.5.22` 维护候选配对已发布的 Respo `0.16.126`，传递 JS-FFI
+为正式 `0.2.6`。正式 Calcit `0.30.1` CLI 与 JS runtime 必须一起使用；展示、展开/折叠和状态 API 不变，异构值展示边界继续保留。不包含 Respo main 的 0.17 破坏性接口。
+本轮迁移 3 处旧 Option 调用、16 处内部 Map 合并调用及测试中的 2 处旧 Option 构造；原测试断言保持。
+站点配置与数值演示函数补充真实 `Map<Tag,String>` / `Fn<Number,Number>` 合同，不收窄待展示值或混合 cursor，不新增 unsafe、断言、预算和验证框架。
+本候选面向独立 `maintenance/0.30.1`，不触碰 main、不发布 npm；维护线和维护 PR 只检查/构建相对路径 artifact，不读取 COS 上传凭据、不 rsync、不部署 Demo。正式状态以 Release 为准，`hud!` 页面报错保持。
 应用需协调其他模块的 Respo / JS-FFI 版本，不能只更新根 pin 或关闭 Caps 严格解析。
 旧版本标签保持原状，候选通过原门禁并正式发布前不能用工作分支替代正式依赖。
 
@@ -28,7 +31,7 @@ caps --strict --ci
 yarn install --immutable
 caps verify --toolchain
 yarn check
-calcit fix --workflow strict --verify --format edn
+calcit fix --workflow strict --verify --format json
 calcit test --require-match --summary-only --format edn
 calcit analyze weak-types --only coverage --summary-only
 yarn check:deprecated
@@ -36,13 +39,13 @@ yarn build:js
 node --test scripts/value-regression.test.mjs
 ```
 
-CI 用同一个绝对 CDN URL 构建和上传前端，COS Action 1.2.0 的
+原 main 和面向 main 的 PR 用同一个绝对 CDN URL 构建和上传前端，COS Action 1.2.0 的
 `public-base-url` 完成内置公开校验，不添加重复上传校验脚本。
 只上传 `dist`；生产 COS 前缀和原服务器 rsync 路径不变。PR 使用
 `pr/<编号>/<run>/<attempt>/` 独立目录，并发按 PR 编号分组，保留排队运行。
 Action 固定已核对的发布提交；Calcit 模块使用上述发布 tag。
 CI 保留严格入口、公共 API、旧 API 诊断、动态分派门禁和原业务测试，
-不再把固定 `fix --workflow strict` 作为升级前提。
+完整 strict 的成功状态与空诊断一并核对，不以单独覆盖率报告代替门禁。
 状态读取检查运行时形状，集合展开/折叠仍派发单个 Enum。
 
 三个 watcher 调用已迁移到 `add-watch!` / `remove-watch!`。

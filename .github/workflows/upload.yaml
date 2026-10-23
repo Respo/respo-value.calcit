@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+      - maintenance/0.30.1
   pull_request: {}
 
 permissions:
   contents: read
 
 concurrency:
-  group: cos-upload-${{ github.repository }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'production' }}
+  group: cos-upload-${{ github.repository }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref }}
   cancel-in-progress: false
   queue: max
 
@@ -58,7 +59,7 @@ jobs:
         calcit calcit.cirru edit format
         git diff --exit-code -- calcit.cirru
         yarn check
-        calcit calcit.cirru fix --workflow strict --verify --format edn
+        calcit calcit.cirru fix --workflow strict --verify --format json | jq -e '.data.workflow.status == "passed" and .diagnostics == []'
         calcit --check-only \
           --ns respo-value.main --ns respo-value.comp.value --ns respo-value.comp.container \
           --ns respo-value.config --ns respo-value.schema \
@@ -86,15 +87,27 @@ jobs:
         else
           asset_prefix="${GITHUB_REPOSITORY}/"
         fi
-        export VITE_BASE_URL="${CDN_ORIGIN}/${asset_prefix}"
+        if [[ "$GITHUB_REF" == "refs/heads/maintenance/0.30.1" || "${GITHUB_BASE_REF:-}" == "maintenance/0.30.1" ]]; then
+          export VITE_BASE_URL="./"
+        else
+          export VITE_BASE_URL="${CDN_ORIGIN}/${asset_prefix}"
+        fi
         echo "prefix=${asset_prefix}" >> "$GITHUB_OUTPUT"
         echo "base-url=${VITE_BASE_URL}" >> "$GITHUB_OUTPUT"
         yarn build:js
         node --test scripts/value-regression.test.mjs
 
+    - name: 保存已验证的前端构建
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: client-dist
+        path: dist/
+        if-no-files-found: error
+        retention-days: 7
+
     - name: Check COS credentials
       id: cos-credentials
-      if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+      if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.base_ref != 'maintenance/0.30.1' && github.event.pull_request.head.repo.full_name == github.repository)
       env:
         COS_BUCKET: ${{ secrets.COS_BUCKET }}
         COS_SECRET_ID: ${{ secrets.COS_SECRET_ID }}
