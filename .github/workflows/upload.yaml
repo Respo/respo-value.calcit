@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - maintenance/0.30.1
+      - prepare/value0522-formal031
   pull_request: {}
 
 permissions:
@@ -54,10 +55,20 @@ jobs:
     - name: Validate Calcit snapshot and types
       run: |
         set -euo pipefail
+        yarn check
+        calcit fix --workflow strict --verify --format json | jq -e '.data.workflow.status == "passed" and .diagnostics == []'
+        calcit test --require-match --summary-only --format json
+        calcit js
+        node --test scripts/value-regression.test.mjs
+        node acceptance/prepare-value.mjs
+
+    - name: Validate prepared Calcit snapshot and types
+      run: |
+        set -euo pipefail
         test ! -e compact.cirru
         test ! -e package.cirru
         calcit calcit.cirru edit format
-        git diff --exit-code -- calcit.cirru
+        test "$(git hash-object calcit.cirru)" = "$(cat acceptance/snapshot-blob.txt)"
         yarn check
         calcit calcit.cirru fix --workflow strict --verify --format json | jq -e '.data.workflow.status == "passed" and .diagnostics == []'
         calcit --check-only \
@@ -159,3 +170,13 @@ jobs:
         rsync -avzr --progress \
           -e "ssh -i $key_file -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts_file" \
           dist/ "rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}/"
+
+    - name: Preserve prepared source and evidence
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: value-prepared
+        path: |
+          calcit.cirru
+          acceptance/
+        if-no-files-found: error
+        retention-days: 7
