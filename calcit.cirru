@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'respo-value.main/main!) (:mode :js) (:reload-fn 'respo-value.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/
-      :type-slots $ {}
+      :type-slots $ {} $ :dispatch-op |respo-value.schema/Op
   :files $ {}
     'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
@@ -375,12 +375,6 @@
           :code $ quote $ defref *store schema/store
           :examples $ []
           :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
-        'deliver-op! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn deliver-op! (op)
-            dispatch! $ decode-op op
-          :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             let
@@ -389,7 +383,7 @@
               , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Enum
+            :args $ [] 'respo-value.schema/Op
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if ssr? $ render-app! realize-ssr!
@@ -421,14 +415,14 @@
             :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! (renderer)
-            renderer (mount-target) (comp-container @*store) deliver-op!
+            renderer (mount-target) (comp-container @*store) dispatch!
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] $ :: 'Fn
               {} (:return 'Unit)
                 :args $ [] 'respo.dom/DomElement 'respo.schema/Component $ :: 'Fn
                   {} (:return 'Unit)
-                    :args $ [] 'Dynamic
+                    :args $ [] 'respo-value.schema/Op
                 :features $ #{} :js-ffi
             :features $ #{} :js-ffi
         'ssr? $ %{} 'CodeEntry (:doc |)
@@ -444,10 +438,16 @@
             respo-value.schema :as schema
             |bottom-tip :default hud!
             |./calcit.build-errors.mjs :default build-errors
-            respo-value.updater :refer $ updater decode-op
+            respo-value.updater :refer $ updater
             respo.ffi.browser :refer $ query-selector
     'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
+        'Op $ %{} 'CodeEntry
+          :doc "|Dispatch Op of the demo app, bound to the :dispatch-op type slot."
+          :code $ quote $ defenum Op
+            :states (:: 'List 'Dynamic) 'Dynamic
+          :examples $ []
+          :schema $ :: 'EnumDef
         'a-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-bool true
           :examples $ []
@@ -596,27 +596,8 @@
         :code $ quote $ ns respo-value.style.widget
           :require $ respo.util.format :refer $ hsl
     'respo-value.updater $ %{} 'FileEntry
-      :defs $ {}
-        'decode-op $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn decode-op (op)
-            if (enum? op) op $ raise "|[Value] expected an Enum operation"
-          :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Enum)
-            :args $ [] 'Dynamic
-          :tests $ []
-            %{} 'TestEntry (:name |preserves-existing-enum-operations)
-              :code $ quote $ let
-                  op $ :: :states ([] :value |branch 7) nil
-                is= op $ decode-op op
-                is= (:: :unknown)
-                  decode-op $ :: :unknown
-              :tags $ #{} :unit :value-boundary
-            %{} 'TestEntry (:name |rejects-non-enum-deliveries)
-              :code $ quote $ do
-                is-throws $ decode-op 123
-                is-throws $ decode-op :states
-              :tags $ #{} :unit :value-boundary
-        'updater $ %{} 'CodeEntry (:doc |)
+      :defs $ {} $ 'updater
+        %{} 'CodeEntry (:doc |)
           :code $ quote $ defn updater (store op op-id) (; println store op)
             match op
               (:states cursor s)
@@ -639,7 +620,7 @@
                   result $ updater store
                     :: :states ([] :value |branch 7) 42
                     , |test
-                assert= (%some 42)
+                assert= (Result :ok 42)
                   get-in result $ [] :states :value |branch 7 :data
                 assert= (%some |unchanged) (get result :value)
               :tags $ #{} :alpha4-boundary :unit
