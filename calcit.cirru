@@ -622,7 +622,7 @@
                     , |test
                 assert= (Result :ok 42)
                   get-in result $ [] :states :value |branch 7 :data
-                assert= (%some |unchanged) (get result :value)
+                assert= (Option :some |unchanged) (get result :value)
               :tags $ #{} :alpha4-boundary :unit
             %{} 'TestEntry (:name |preserves-root-nil-payload)
               :code $ quote $ assert=
