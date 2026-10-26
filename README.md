@@ -14,7 +14,14 @@ respo-value.comp.value/comp-value (>> states :value) v 0
 
 last argument is "default expanding level", set a larger value to expand structures.
 
-### 0.6.0-alpha.2 候选：使用者影响
+### 当前工具链：Calcit 0.31.0-alpha.7
+
+CLI 与 `@calcit/procs` 成对升级至已发布 `0.31.0-alpha.7`，模块依赖保持不变。
+该版默认预检查会拒绝未证明的 Dynamic 流向；沿用原测试和完整 strict 验收，不关闭
+proof audit、不放宽类型基线。此配对更新不改 Snapshot、公开 API 或部署路径。
+0.30 稳定消费者继续使用原维护线。下述 alpha.6 记录保留为历史，不代表当前配对。
+
+### 0.6.0-alpha.2 / alpha.6 历史迁移记录
 
 沿用已发布 Calcit CLI / `@calcit/procs` `0.31.0-alpha.6`，以及 Respo
 `0.17.0-alpha.2` 与传递 JS FFI `0.2.5`，不引入新的工具链或模块配对。
@@ -33,7 +40,7 @@ cursor 入口的接收者是 `Option<Dynamic>`，解包后仍由原 `decode-map-
 
 ### 开发与验证
 
-Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.6`，使用 Node.js 24、
+Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.7`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
 此前 Value `0.6.0-alpha.1` 依赖 Respo `0.17.0-alpha.2`，接入 Respo 0.17 的破坏性接口，
 因此只能与同样升级到 Respo 0.17 / Calcit 0.31 预发布配对的应用一起使用。此前已将 List、Vector、Set、Map 四个组件中八处展开/折叠状态写入改为 `.assoc`，保留既有 Map 键值类型关系；展示、派发的单个 Enum 和状态 API 不变，原六项附带测试及七项 JS 业务回归保持原样。
