@@ -35,7 +35,7 @@
                 span $ {}
                 list-> ({})
                   ->
-                    range $ count data-table
+                    range $ .len data-table
                     map $ fn (idx)
                       let
                           entry $ &list:nth data-table idx
@@ -127,7 +127,7 @@
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
-                    str |[]~ $ count x
+                    str |[]~ $ .len x
                     , widget/only-text
                 div
                   {}
@@ -154,7 +154,7 @@
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
-                    str |{}~ $ count x
+                    str |{}~ $ .len x
                     , widget/only-text
                 div
                   {}
@@ -195,7 +195,7 @@
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
-                    str |#{}~ $ count x
+                    str |#{}~ $ .len x
                     , widget/only-text
                 div
                   {}
@@ -260,7 +260,7 @@
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
-                    str |[]~ $ count x
+                    str |[]~ $ .len x
                     , widget/only-text
                 div
                   {}
@@ -276,7 +276,7 @@
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
             decode-map-as
-              option:unwrap $ get states :cursor
+              .unwrap $ get states :cursor
               :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -313,7 +313,7 @@
             list->
               {} $ :style $ &merge widget/style-children layout/column
               ->
-                range $ count xs
+                range $ .len xs
                 map $ fn (index)
                   [] index $ comp-value (>> states index) (&list:nth xs index) (dec level)
           :examples $ []
@@ -326,7 +326,7 @@
               list->
                 {} $ :style $ &merge widget/style-children layout/column
                 ->
-                  range $ count pairs
+                  range $ .len pairs
                   map $ fn (index)
                     let
                         field $ &list:nth pairs index
@@ -395,7 +395,7 @@
             :features $ #{} :js-ffi
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
-            option:unwrap $ query-selector |.app
+            .unwrap $ query-selector |.app
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.dom/DomElement)
             :args $ []

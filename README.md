@@ -14,17 +14,34 @@ respo-value.comp.value/comp-value (>> states :value) v 0
 
 last argument is "default expanding level", set a larger value to expand structures.
 
+### 0.6.0-alpha.2 候选：使用者影响
+
+沿用已发布 Calcit CLI / `@calcit/procs` `0.31.0-alpha.6`，以及 Respo
+`0.17.0-alpha.2` 与传递 JS FFI `0.2.5`，不引入新的工具链或模块配对。
+0.30 稳定线应用继续使用原 `0.5.x`，不能单独混装此 0.31 预发布候选。
+公开 API、集合展示和展开/折叠事件不变；七处已知 List/Map/Set 的长度读取改用
+`.len`，两处 Option 解包改用 `.unwrap`，保留缺失值异常与求值次数。
+相对已发布 alpha.1，本候选还包含主线已有的 alpha.2→alpha.6 工具链配对、八处
+Map `.assoc` 和一处附带测试 `%some`→`Option :some`；不将这些累计变更冒充为本 PR 新增。
+
+cursor 入口的接收者是 `Option<Dynamic>`，解包后仍由原 `decode-map-as`
+验证为 `List<Dynamic>`：缺失继续抛错，非法 payload 继续拒绝；不把开放 payload
+描述为类型已证明，不删 decoder、不增加 schema、强转或默认值。
+其余 schema、六项原生与七项 JS 原测试、HUD、安装策略和部署路径不变；不新增验证脚本或门禁。
+名义 Struct/Enum 的展示缺口仍由 [#55](https://github.com/Respo/respo-value.calcit/issues/55)
+跟踪，本轮不将它冒充为已修复。候选不代表已发版，发布状态以对应 Git tag 为准。
+
 ### 开发与验证
 
 Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.6`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
-使用者影响：main 上的 Value `0.6.0-alpha.1` 候选依赖 Respo `0.17.0-alpha.2`，接入 Respo 0.17 的破坏性接口，
+此前 Value `0.6.0-alpha.1` 依赖 Respo `0.17.0-alpha.2`，接入 Respo 0.17 的破坏性接口，
 因此只能与同样升级到 Respo 0.17 / Calcit 0.31 预发布配对的应用一起使用。此前已将 List、Vector、Set、Map 四个组件中八处展开/折叠状态写入改为 `.assoc`，保留既有 Map 键值类型关系；展示、派发的单个 Enum 和状态 API 不变，原六项附带测试及七项 JS 业务回归保持原样。
 仍使用 Calcit 0.30.1 / Respo 0.16 的应用继续使用维护线的 `0.5.x`（当前 `0.5.22`）。
 应用需协调其他模块的 Respo / JS-FFI 版本，不能只更新根 pin 或关闭 Caps 严格解析。
 旧版本标签保持原状，候选通过原门禁并正式发布前不能用工作分支替代正式依赖。
 
-本轮只将 CLI/runtime 从 alpha.5 配对到已发布且满足原一小时隔离期的 alpha.6。
+此前工具链配对只将 CLI/runtime 从 alpha.5 更新到已发布且满足原一小时隔离期的 alpha.6。
 Snapshot 全部 59 定义、类型/FFI、公开 API 和原测试不变，没有新增自动改写规则。
 官方 Linux 前后原门禁、六项原生和七项 JS 回归均通过；64 个生成模块中仅
 core/internal 两个改变，其余 62 个字节相同。原 15 个 partial 定义仍存在，
