@@ -125,7 +125,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
                     str |[]~ $ count x
                     , widget/only-text
@@ -133,7 +133,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
@@ -152,7 +152,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
                     str |{}~ $ count x
                     , widget/only-text
@@ -160,7 +160,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <> |{} widget/only-text
                   render-fields states x level
           :examples $ []
@@ -193,7 +193,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
                     str |#{}~ $ count x
                     , widget/only-text
@@ -201,7 +201,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <> (str |#{}) widget/only-text
                   render-children states (&set:to-list x) level
           :examples $ []
@@ -258,7 +258,7 @@
                   {}
                     :style $ &merge widget/structure style-folded
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <>
                     str |[]~ $ count x
                     , widget/only-text
@@ -266,7 +266,7 @@
                   {}
                     :style $ &merge widget/structure layout/row
                     :on-click $ fn (e d!)
-                      d! $ :: :states cursor $ assoc state :folded? (not folded?)
+                      d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
