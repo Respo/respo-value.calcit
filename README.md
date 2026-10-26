@@ -16,13 +16,21 @@ last argument is "default expanding level", set a larger value to expand structu
 
 ### 开发与验证
 
-Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.5`，使用 Node.js 24、
+Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.6`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
 使用者影响：main 上的 Value `0.6.0-alpha.1` 候选依赖 Respo `0.17.0-alpha.2`，接入 Respo 0.17 的破坏性接口，
-因此只能与同样升级到 Respo 0.17 / Calcit 0.31 预发布配对的应用一起使用。此次将 List、Vector、Set、Map 四个组件中八处展开/折叠状态写入改为 `.assoc`，保留既有 Map 键值类型关系；展示、派发的单个 Enum 和状态 API 不变，原六项附带测试及七项 JS 业务回归保持原样。
+因此只能与同样升级到 Respo 0.17 / Calcit 0.31 预发布配对的应用一起使用。此前已将 List、Vector、Set、Map 四个组件中八处展开/折叠状态写入改为 `.assoc`，保留既有 Map 键值类型关系；展示、派发的单个 Enum 和状态 API 不变，原六项附带测试及七项 JS 业务回归保持原样。
 仍使用 Calcit 0.30.1 / Respo 0.16 的应用继续使用维护线的 `0.5.x`（当前 `0.5.22`）。
 应用需协调其他模块的 Respo / JS-FFI 版本，不能只更新根 pin 或关闭 Caps 严格解析。
 旧版本标签保持原状，候选通过原门禁并正式发布前不能用工作分支替代正式依赖。
+
+本轮只将 CLI/runtime 从 alpha.5 配对到已发布且满足原一小时隔离期的 alpha.6。
+Snapshot 全部 59 定义、类型/FFI、公开 API 和原测试不变，没有新增自动改写规则。
+官方 Linux 前后原门禁、六项原生和七项 JS 回归均通过；64 个生成模块中仅
+core/internal 两个改变，其余 62 个字节相同。原 15 个 partial 定义仍存在，
+不将版本配对描述为类型债务清零；名义 Struct/Enum 展示仍受
+[现有问题 #55](https://github.com/Respo/respo-value.calcit/issues/55) 跟踪。
+该证据不是公共 `dissoc` 修复或实际浏览器验收，也不构成合并、部署或发版授权。
 
 ```sh
 caps --strict --ci
@@ -43,7 +51,7 @@ CI 用同一个绝对 CDN URL 构建和上传前端，COS Action 1.2.0 的
 `pr/<编号>/<run>/<attempt>/` 独立目录，并发按 PR 编号分组，保留排队运行。
 Action 固定已核对的发布提交；Calcit 模块使用上述发布 tag。
 CI 保留严格入口、公共 API、旧 API 诊断、动态分派门禁和原业务测试，
-不再把固定 `fix --workflow strict` 作为升级前提。
+保留 `fix --workflow strict --verify` 原门禁，不以自动 `fix --apply` 代替检查。
 状态读取检查运行时形状，集合展开/折叠仍派发单个 Enum。
 
 三个 watcher 调用已迁移到 `add-watch!` / `remove-watch!`。
@@ -61,7 +69,7 @@ Tag/String/Number cursor、nil payload 和未知 Enum 操作的行为保持不�
 覆盖率是诊断视图，不冒充强制预算门禁。公开 API、业务测试与部署规则保持不变。
 Yarn 保留原 `@calcit/finger-vec@0.1.1` 精确允许项，不为 procs 新增免等待例外。
 经维护者授权，npm 新版本安装隔离期明确设为一小时，统一用于本地和 CI；其他门禁不变。
-完整验证范围见[迁移记录](history/20261005-published-alpha6.md)。
+历史 0.29 配对验证范围见[迁移记录](history/20261005-published-alpha6.md)，不作为本轮新配对的验收证据。
 
 https://github.com/calcit-lang/respo-calcit-workflow
 
