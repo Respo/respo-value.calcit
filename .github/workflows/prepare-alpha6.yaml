@@ -1,0 +1,60 @@
+name: Prepare exact published alpha6 pairing
+on:
+  push:
+    branches: [prepare/paired-alpha6-459]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: |
+          corepack enable
+          corepack prepare yarn@4.18.0 --activate
+      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0
+        with:
+          tools: calcit,caps
+          caps-version: "0.1.1"
+          deps-file: deps.cirru
+      - name: Original alpha5 gates
+        run: |
+          set -euo pipefail
+          test "$(calcit -v)" = "0.31.0-alpha.5"
+          caps --strict --ci
+          yarn install --immutable
+          caps verify --toolchain
+          bash reviewed-gates.sh > acceptance-before.log 2>&1
+      - name: Pair manifests without source edits
+        run: node apply-reviewed.mjs pair
+      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0
+        with:
+          tools: calcit,caps
+          caps-version: "0.1.1"
+          deps-file: deps.cirru
+      - name: Original alpha6 gates
+        run: |
+          set -euo pipefail
+          test "$(calcit -v)" = "0.31.0-alpha.6"
+          caps --strict --ci
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+          yarn install --immutable
+          caps verify --toolchain
+          bash reviewed-gates.sh > acceptance-alpha6.log 2>&1
+          node apply-reviewed.mjs verify
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: value-alpha6-459-diagnostics
+          path: |
+            acceptance
+            acceptance-*.log
+          if-no-files-found: error
+          retention-days: 30
