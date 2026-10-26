@@ -16,10 +16,10 @@ last argument is "default expanding level", set a larger value to expand structu
 
 ### 开发与验证
 
-Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.4`，使用 Node.js 24、
+Calcit 与 `@calcit/procs` 固定为已发布的预发布配对 `0.31.0-alpha.5`，使用 Node.js 24、
 Yarn 4.18.0。源码与依赖分别维护在 `calcit.cirru` 和 `deps.cirru`。
 使用者影响：main 上的 Value `0.6.0-alpha.1` 候选依赖 Respo `0.17.0-alpha.2`，接入 Respo 0.17 的破坏性接口，
-因此只能与同样升级到 Respo 0.17 / Calcit 0.31 预发布配对的应用一起使用。本次仅将原附带测试中的一处 `%some` 改为 `Option :some`；展示、展开/折叠和状态 API 不变。
+因此只能与同样升级到 Respo 0.17 / Calcit 0.31 预发布配对的应用一起使用。此次将 List、Vector、Set、Map 四个组件中八处展开/折叠状态写入改为 `.assoc`，保留既有 Map 键值类型关系；展示、派发的单个 Enum 和状态 API 不变，原六项附带测试及七项 JS 业务回归保持原样。
 仍使用 Calcit 0.30.1 / Respo 0.16 的应用继续使用维护线的 `0.5.x`（当前 `0.5.22`）。
 应用需协调其他模块的 Respo / JS-FFI 版本，不能只更新根 pin 或关闭 Caps 严格解析。
 旧版本标签保持原状，候选通过原门禁并正式发布前不能用工作分支替代正式依赖。
