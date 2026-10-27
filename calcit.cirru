@@ -38,7 +38,7 @@
                     range $ .len data-table
                     map $ fn (idx)
                       let
-                          entry $ &list:nth data-table idx
+                          entry $ .unwrap $ .get data-table idx
                         [] idx $ comp-section (>> states idx) (:label entry) (:value entry)
                 comp-inspect |States states nil
           :examples $ []
@@ -203,7 +203,7 @@
                     :on-click $ fn (e d!)
                       d! $ :: :states cursor $ .assoc state :folded? (not folded?)
                   <> (str |#{}) widget/only-text
-                  render-children states (&set:to-list x) level
+                  render-children states (.to-list x) level
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Set 'Dynamic) 'Number
@@ -315,27 +315,31 @@
               ->
                 range $ .len xs
                 map $ fn (index)
-                  [] index $ comp-value (>> states index) (&list:nth xs index) (dec level)
+                  [] index $ comp-value (>> states index)
+                    .unwrap $ .get xs index
+                    dec level
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
         'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-fields (states xs level)
             let
-                pairs $ &map:to-list xs
+                pairs $ .to-list xs
               list->
                 {} $ :style $ &merge widget/style-children layout/column
                 ->
                   range $ .len pairs
                   map $ fn (index)
                     let
-                        field $ &list:nth pairs index
-                        field-key $ &list:nth field 0
+                        field $ .unwrap $ .get pairs index
+                        field-key $ .unwrap $ .get field 0
                       [] field-key $ div
                         {} $ :style layout/row
                         comp-value states field-key 0
                         =< 2 nil
-                        comp-value (>> states field-key) (&list:nth field 1) (dec level)
+                        comp-value (>> states field-key)
+                          .unwrap $ .get field 1
+                          dec level
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
             :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
@@ -427,7 +431,7 @@
             :features $ #{} :js-ffi
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
-            option:some? $ query-selector |meta.respo-ssr
+            .some? $ query-selector |meta.respo-ssr
           :examples $ []
           :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
