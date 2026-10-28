@@ -7,11 +7,11 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 ### 使用者影响与当前工具链
 
-候选 **0.6.0-alpha.2** 配对正式 **Calcit / @calcit/procs 0.31.0**，依赖同步到真实发布的 Respo **0.17.0-alpha.4** 与传递 JS-FFI **0.2.7**。消费者应整图更新、重新生成 JS 并重启服务；发布前不要用候选 main/hash 代替 tag。现有 0.5 稳定维护线继续供 Calcit 0.30 / Respo 0.16 消费者使用，旧 tag 不移动。
+候选 **0.6.0** 配对正式 **Calcit / @calcit/procs 0.32.0**，依赖声明同步为 Respo **0.17.0** 与传递 JS-FFI **0.2.8**。消费者需同步工具链与完整依赖图、重新生成 JS。当前 Respo 正式 tag 尚待发布，本地验收使用其独立迁移候选，不能视为正式 Caps 安装已通过；发布前不要以 main/hash 替代 tag。现有 0.5 稳定维护线继续供 Calcit 0.30 / Respo 0.16 消费者使用，旧 tag 不移动。
 
-本轮只调整依赖图并迁移 8 个内部调用：一个 Option 判定和两个集合转 List 使用公开方法，五个 List 索引使用 `.get` 后立即 `.unwrap`。原 List/index 均各求值一次；缺失/非法索引继续失败，不增加 nil fallback，异常文本不保证逐字相同。Map pair 的异构载荷仍为真实 Dynamic；Map/Set 转 List 对应原 core 实现，不引入排序或改变去重语义。公开 schema、数据/状态 API 和原测试保持。
+本轮通过官方 format 更新类型标注存储语法：Op 的 List 字段与两个函数类型标注改用 0.32.0 格式。57 个定义的官方 schema 前后相同，仅 3 个定义的实现或附带测试视图发生类型语法变化；公开 API、运行逻辑、原测试与门禁保持，不增加强转或放宽 Dynamic 边界。
 
-相对已发布 alpha.1，候选还累积了 main 已有的正式工具链配对、七处 `.len`、八处 `.assoc`、两处 `.unwrap` 和附带测试的 Option 构造迁移；这些并非本轮 PR 新增。保留现有 0.6 alpha 发布线，不单独混装旧 Respo 或 runtime。
+本地原六项附带测试、七项 JS 回归、全部定义和公共 API 检查、完整 strict、immutable 安装及构建通过。实际页面已验证基础值显示、List/Vector/Set/Map 折叠和展开、刷新恢复初始状态，控制台无警告或错误。远端 CI 和正式依赖图仍需在 Respo tag 可用后确认。
 
 ### 用法与真实边界
 
