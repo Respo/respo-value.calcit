@@ -13,7 +13,7 @@
         'DemoEntry $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct DemoEntry (:label 'String) (:value 'Dynamic)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
           :tests $ [] $ %{} 'TestEntry (:name |preserves-label-and-falsy-payloads)
             :code $ quote $ let
                 nil-entry $ DemoEntry :label |nil :value nil
@@ -42,8 +42,7 @@
                         [] idx $ comp-section (>> states idx) (:label entry) (:value entry)
                 comp-inspect |States states nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
         'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-section (states hint value)
             div
@@ -53,8 +52,7 @@
                 {} $ :style style-value
                 comp-value states value 1
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'String 'Dynamic
+          :schema $ quote $ Fn (Map Dynamic Dynamic) String Dynamic (-> respo.schema/Element)
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
             [] (DemoEntry :label "|a nil:" :value nil) (DemoEntry :label "|a number:" :value schema/a-number) (DemoEntry :label "|a string:" :value schema/a-string) (DemoEntry :label "|a tag:" :value schema/a-tag) (DemoEntry :label "|a bool:" :value schema/a-bool) (DemoEntry :label "|a function:" :value schema/a-function) (DemoEntry :label "|a list:" :value schema/a-list) (DemoEntry :label "|a vector:" :value schema/a-vector) (DemoEntry :label "|a hash-set:" :value schema/a-hash-set) (DemoEntry :label "|a nested vector:" :value schema/a-nested-vector) (DemoEntry :label "|a hash-map:" :value schema/a-hash-map) (DemoEntry :label "|a nested hash-map:" :value schema/a-nested-hash-map) (DemoEntry :label "|a mixed data:" :value schema/a-mixed-data)
@@ -62,7 +60,7 @@
                 div $ {} $ :style style-section
                 =< 8 nil
           :examples $ []
-          :schema $ :: 'List 'respo-value.comp.container/DemoEntry
+          :schema $ quote $ List respo-value.comp.container/DemoEntry
         'read-states $ %{} 'CodeEntry
           :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
           :code $ quote $ defn read-states (store)
@@ -72,19 +70,18 @@
                 .unwrap-or (get store-map :states) ({})
                 :: 'Map 'Dynamic 'Dynamic
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'Map 'Dynamic 'Dynamic
+          :schema $ quote $ Fn Dynamic
+            -> $ Map Dynamic Dynamic
+            :features :js-ffi
         'style-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-section
             {} (:display |flex) (:font-family |Verdana) (:padding "|8px 8px")
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'style-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-value ({})
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.container
           :require
@@ -103,15 +100,13 @@
             <> (str x)
               &merge widget/literal $ {} $ :color (hsl 320 100 40)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] 'Bool
+          :schema $ quote $ Fn Bool (-> respo.schema/Element)
         'comp-function $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-function ()
             <> |fn $ &merge widget/literal $ {}
               :color $ hsl 0 90 70
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ []
+          :schema $ quote $ Fn (-> respo.schema/Element)
         'comp-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-list (states x level)
             let
@@ -137,8 +132,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (List Dynamic) Number (-> respo.schema/Element)
         'comp-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-map (states x level)
             let
@@ -164,22 +158,19 @@
                   <> |{} widget/only-text
                   render-fields states x level
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (Map Dynamic Dynamic) Number (-> respo.schema/Element)
         'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-nil ()
             <> |nil $ &merge widget/literal $ {}
               :color $ hsl 320 80 60
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ []
+          :schema $ quote $ Fn (-> respo.schema/Element)
         'comp-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-number (x)
             <> (str x)
               &merge widget/literal $ {} $ :color (hsl 200 80 50)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] 'Number
+          :schema $ quote $ Fn Number (-> respo.schema/Element)
         'comp-set $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-set (states x level)
             let
@@ -205,8 +196,7 @@
                   <> (str |#{}) widget/only-text
                   render-children states (.to-list x) level
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Set 'Dynamic) 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (Set Dynamic) Number (-> respo.schema/Element)
         'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-string (x)
             span
@@ -217,15 +207,13 @@
               <> "|\"" $ {} $ :color (hsl 0 0 40 0.2)
               <> x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] 'String
+          :schema $ quote $ Fn String (-> respo.schema/Element)
         'comp-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-tag (x)
             <> (str x)
               &merge widget/literal $ {} $ :color (hsl 200 90 60)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] 'Tag
+          :schema $ quote $ Fn Tag (-> respo.schema/Element)
         'comp-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-value (states x level)
             let
@@ -244,8 +232,7 @@
                 true $ div $ {} (:style widget/style-unknown)
                   :inner-text $ str-spaced |unknown $ to-lispy-string x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic Number (-> respo.schema/Element)
         'comp-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-vector (states x level)
             let
@@ -270,8 +257,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (List Dynamic) Number (-> respo.schema/Element)
         'read-cursor $ %{} 'CodeEntry
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
@@ -279,10 +265,9 @@
               .unwrap $ get states :cursor
               :: 'List 'Dynamic
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'Dynamic
+          :schema $ quote $ Fn (Map Dynamic Dynamic)
+            -> $ List Dynamic
+            :features :js-ffi
         'read-folded $ %{} 'CodeEntry
           :doc "|Narrow the optional folded flag stored in dynamic component state."
           :code $ quote $ defn read-folded (state fallback)
@@ -291,9 +276,7 @@
                 decode-map-as (either value fallback) 'Bool
               (:none) fallback
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Bool
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Bool (-> Bool) (:features :js-ffi)
         'read-state-data $ %{} 'CodeEntry
           :doc "|Narrow the dynamic component-state payload to the map used by this inspector."
           :code $ quote $ defn read-state-data (states)
@@ -304,10 +287,9 @@
                   :: 'Map 'Tag 'Dynamic
               (:none) ({})
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Dynamic Dynamic)
+            -> $ Map Tag Dynamic
+            :features :js-ffi
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (states xs level)
             list->
@@ -319,8 +301,7 @@
                     .unwrap $ .get xs index
                     dec level
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'List 'Dynamic) 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (List Dynamic) Number (-> respo.schema/Element)
         'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-fields (states xs level)
             let
@@ -341,8 +322,7 @@
                           .unwrap $ .get field 1
                           dec level
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Element)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) (:: 'Map 'Dynamic 'Dynamic) 'Number
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (Map Dynamic Dynamic) Number (-> respo.schema/Element)
         'style-folded $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-folded
             {}
@@ -351,7 +331,7 @@
               :color :white
               :border-radius |12px
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.value
           :require
@@ -365,12 +345,12 @@
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev? true
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
             {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |http://cdn.tiye.me/respo-value/) (:title |Value) (:icon |http://cdn.tiye.me/logo/respo.png) (:storage-key |respo-value)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.config
     'respo-value.main $ %{} 'FileEntry
@@ -378,7 +358,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Ref (Map Tag Dynamic)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             let
@@ -386,24 +366,19 @@
               reset! *store store
               , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'respo-value.schema/Op
+          :schema $ quote $ Fn respo-value.schema/Op (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if ssr? $ render-app! realize-ssr!
             render-app! render!
             add-watch! *store :rerender $ fn (prev store) (render-app! render!)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
             .unwrap $ query-selector |.app
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.dom/DomElement)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> respo.dom/DomElement) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
@@ -414,26 +389,23 @@
               hud! |error build-errors
             println "|Code updated."
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! (renderer)
             renderer (mount-target) (comp-container @*store) dispatch!
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ [] 'respo.dom/DomElement 'respo.schema/Component $ :: 'Fn
-                  {} (:return 'Unit)
-                    :args $ [] 'respo-value.schema/Op
-                :features $ #{} :js-ffi
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn
+            Fn respo.dom/DomElement respo.schema/Component
+              Fn respo-value.schema/Op $ -> Unit
+              -> Unit
+              :features :js-ffi
+            -> Unit
+            :features :js-ffi
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
             .some? $ query-selector |meta.respo-ssr
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.main
           :require
@@ -449,19 +421,19 @@
         'Op $ %{} 'CodeEntry
           :doc "|Dispatch Op of the demo app, bound to the :dispatch-op type slot."
           :code $ quote $ defenum Op
-            :states (:: 'List 'Dynamic) 'Dynamic
+            :states
+              quote $ List Dynamic
+              , 'Dynamic
           :examples $ []
-          :schema $ :: 'EnumDef
+          :schema $ quote EnumDef
         'a-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-bool true
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-function $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-function
             fn (x)
-              hint-fn $ {}
-                :args $ [] 'Number
-                :return 'Number
+              hint-fn $ Fn Number $ -> Number
               + x 1
           :examples $ []
           :tests $ [] $ %{} 'TestEntry (:name |increments-a-number)
@@ -471,21 +443,21 @@
           :code $ quote $ def a-hash-map
             {} (:a 1) (:b 2)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-hash-set $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-hash-set (#{} 1 2 3)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-list ([] 1 2 3 4)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-mixed-data $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-mixed-data
             {} $ :a $ [] 1 2
               {} $ :c |str
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-nested-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-nested-hash-map
             {} (:a 1)
@@ -493,37 +465,37 @@
                 :d $ {} $ :e 4
                 :f 5
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-nested-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-nested-vector
             [] 1 2
               [] 3 4 $ [] 5 6
               , 7
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-number 1
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-string "|a string"
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-tag :tg
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'a-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-vector ([] 1 2 3)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             {}
               :states $ {}
               :cursor $ []
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.schema
     'respo-value.style.layout $ %{} 'FileEntry
@@ -532,17 +504,17 @@
           :code $ quote $ def column
             {} (:display |flex) (:flex-direction |column) (:align-items |flex-start)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ Map Tag String
         'container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def container
             {} $ :padding "|100px 24px"
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def row
             {} (:display |flex) (:flex-direction |row) (:align-items |flex-start)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.style.layout
     'respo-value.style.widget $ %{} 'FileEntry
@@ -558,12 +530,12 @@
               :box-shadow $ str "|0 0 1px " $ hsl 0 0 0 0.2
               :vertical-align |top
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ Map Tag String
         'only-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def only-text
             {} (:pointer-events |none) (:font-size 14) (:line-height |20px)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'structure $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def structure
             {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 2px")
@@ -578,24 +550,24 @@
               :vertical-align |top
               :cursor |pointer
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
         'style-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-children
             {} (:display |inline-block) (:vertical-align |top) (:padding |0px)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ Map Tag String
         'style-hint $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-hint
             {} (:width |240px)
               :color $ hsl 0 0 50
               :font-size |14px
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'style-unknown $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-unknown
             {} (:color :red) (:font-size 12)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.style.widget
           :require $ respo.util.format :refer $ hsl
@@ -612,9 +584,8 @@
                   :: 'Map 'Tag 'Dynamic
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Enum 'String
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Tag Dynamic) Enum String
+            -> $ Map Tag Dynamic
           :tests $ []
             %{} 'TestEntry (:name |preserves-mixed-cursor-and-store)
               :code $ quote $ let
@@ -646,9 +617,7 @@
                       , |test
                     , |unexpected-success
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return 'String
+                    hint-fn $ Fn String $ -> String
                     , message
               :tags $ #{} :alpha4-boundary :unit
             %{} 'TestEntry (:name |preserves-unknown-operation)
