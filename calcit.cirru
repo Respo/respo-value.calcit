@@ -331,7 +331,7 @@
               :color :white
               :border-radius |12px
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.value
           :require
@@ -504,7 +504,7 @@
           :code $ quote $ def column
             {} (:display |flex) (:flex-direction |column) (:align-items |flex-start)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def container
             {} $ :padding "|100px 24px"
@@ -514,7 +514,7 @@
           :code $ quote $ def row
             {} (:display |flex) (:flex-direction |row) (:align-items |flex-start)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.style.layout
     'respo-value.style.widget $ %{} 'FileEntry
@@ -530,7 +530,7 @@
               :box-shadow $ str "|0 0 1px " $ hsl 0 0 0 0.2
               :vertical-align |top
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'only-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def only-text
             {} (:pointer-events |none) (:font-size 14) (:line-height |20px)
@@ -550,12 +550,12 @@
               :vertical-align |top
               :cursor |pointer
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag Dynamic
         'style-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-children
             {} (:display |inline-block) (:vertical-align |top) (:padding |0px)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'style-hint $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-hint
             {} (:width |240px)
