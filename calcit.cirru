@@ -77,7 +77,7 @@
           :code $ quote $ def style-section
             {} (:display |flex) (:font-family |Verdana) (:padding "|8px 8px")
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'style-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-value ({})
           :examples $ []
@@ -345,12 +345,12 @@
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev? true
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Bool
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
             {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |http://cdn.tiye.me/respo-value/) (:title |Value) (:icon |http://cdn.tiye.me/logo/respo.png) (:storage-key |respo-value)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.config
     'respo-value.main $ %{} 'FileEntry
@@ -429,13 +429,14 @@
         'a-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-bool true
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Bool
         'a-function $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-function
             fn (x)
               hint-fn $ Fn Number $ -> Number
               + x 1
           :examples $ []
+          :schema $ quote $ Fn Number (-> Number)
           :tests $ [] $ %{} 'TestEntry (:name |increments-a-number)
             :code $ quote $ assert= 2 (a-function 1)
             :tags $ #{} :alpha4-boundary :unit
@@ -443,15 +444,15 @@
           :code $ quote $ def a-hash-map
             {} (:a 1) (:b 2)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag Number
         'a-hash-set $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-hash-set (#{} 1 2 3)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Set Number
         'a-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-list ([] 1 2 3 4)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ List Number
         'a-mixed-data $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-mixed-data
             {} $ :a $ [] 1 2
@@ -476,19 +477,19 @@
         'a-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-number 1
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Number
         'a-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-string "|a string"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'a-tag $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-tag :tg
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Tag
         'a-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-vector ([] 1 2 3)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ List Number
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             {}
@@ -509,7 +510,7 @@
           :code $ quote $ def container
             {} $ :padding "|100px 24px"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def row
             {} (:display |flex) (:flex-direction |row) (:align-items |flex-start)
@@ -562,7 +563,7 @@
               :color $ hsl 0 0 50
               :font-size |14px
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'style-unknown $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-unknown
             {} (:color :red) (:font-size 12)
