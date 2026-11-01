@@ -7,11 +7,11 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 ### 使用者影响与当前工具链
 
-候选 **0.6.0** 配对正式 **Calcit / @calcit/procs 0.32.1**，依赖声明同步为 Respo **0.17.1** 与传递 JS-FFI **0.2.9**。消费者需同步工具链与完整依赖图、重新生成 JS。本轮已使用这两个真实发布 tag 通过 Caps strict 与工具链配对，没有本地候选替代。现有 0.5 稳定维护线继续供 Calcit 0.30 / Respo 0.16 消费者使用，旧 tag 不移动。
+候选 **0.6.1** 继续配对正式 **Calcit / @calcit/procs 0.32.1**，依赖升级为正式 Respo **0.18.0** 与传递 JS-FFI **0.2.9**。消费者须协调完整精确图并重新生成 JS；直接构造上游 DomProps 的代码采用 Option 字段。旧 0.6.0 与 0.5 维护线 tag 不移动；0.6.1 发布前不引用候选 main/hash。
 
-本轮通过官方 format 更新类型标注存储语法：Op 的 List 字段与两个函数类型标注改用 0.32.0 格式。原 57 个定义中，3 个定义的实现或附带测试只发生等价类型语法转换；运行逻辑和原断言不变。新增六个共享样式 Map 的明确 schema：四处 Map<Tag,String>，两处原有 String/Tag 混合 CSS 值使用 Map<Tag,Dynamic>；从未声明类型收敛到真实 Map 边界，不把混合值伪装为 String，不增加强转或放宽门禁。
+本 PR 仅改 deps.cirru、package.json 与本文档，规范 Snapshot、测试和工作流相对当前 main 不变。发布范围还包含 main 已合并、尚未进入 0.6.0 tag 的 14 处 schema 收紧：配置、演示标量/集合及共享样式等定义补齐真实类型。官方视图对照确认 57 个实际定义的运行代码、原测试和其他元数据与已发布 0.6.0 一致；不是把整个 patch 都说成仅改依赖。上游 Respo 包含真实行为变化，需整图验收。
 
-本轮原六项附带测试、七项 JS 回归、全部 221 个定义及 57 个公共定义、完整 strict（diagnostics=[]）、dynamic-method=0、deprecated=0、immutable 安装及构建通过。实际页面已验证基础值显示、List/Vector/Set/Map 折叠和展开、刷新恢复初始状态，控制台无警告或错误。HMR 和其他浏览器未复验；远端 CI 以精确 PR 提交结果为准。
+本候选通过正式 tag 正常 Caps strict 安装与工具链配对、Yarn immutable、canonical、224 项全定义、57 项公开定义、完整 strict（diagnostics=[]）、dynamic-method=0、原六项 native、原七项 JS 渲染回归、文档检查和构建。实际页面完成 List/Vector/Set/Map 折叠与展开，普通刷新恢复 Demo 初始状态，console warn/error=[]；未复验 HMR 或其他浏览器，不操作文件、剪贴板或真实数据。57 个本地非 meta 定义仍有 17 partial，不冒称所有异构输入已静态化，原类型门禁不放宽。
 
 ### 用法与真实边界
 
