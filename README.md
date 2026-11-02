@@ -9,7 +9,7 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 0.6.3 配对正式 **Calcit / @calcit/procs 0.34.2**、Respo **0.18.1** 与传递 JS-FFI **0.2.9**；请严格安装完整依赖图并重新生成 JS，发行状态以正式 Git tag 为准。这里保留 0.18 兼容线：Respo 0.19 的 CoordKey 合同仅接受 Tag/String/Number，会限制本组件既有任意异构 Map key 的展示和状态路径，不能直接替换。
 
-Map 键值对读取适配 0.34.2 的固定二元类型，使用 `&list:nth` 读取 Map 产生的 pair；索引始终是 0 或 1，不增加断言或强转。Demo 的空样式改用已有 `String | Number | Tag` StyleValue union，补齐之前遗漏的 Dynamic。公开任意值输入、混合游标、已有标量样式 union、原组件和派发行为保持。
+Map 键值对读取适配 0.34.2 的固定二元类型，使用 `&list:nth` 读取 Map 产生的 pair；索引始终是 0 或 1，不增加断言或强转。Demo 空样式中原先过宽的 Dynamic 标注收窄为已有 `String | Number | Tag` StyleValue union。公开任意值输入、混合游标、已有标量样式 union、原组件和派发行为保持。
 
 本地全部 225 个定义、完整 strict、原六项 native 测试、原七项 JS 渲染/展开折叠回归、文档和构建通过。未增加检查脚本、放宽基线或类型门禁。名义 Struct/Enum 展示缺口仍见下文已知限制；本轮不宣称修复。
 
