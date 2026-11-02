@@ -81,7 +81,7 @@
         'style-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-value ({})
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.container
           :require
@@ -313,14 +313,12 @@
                   map $ fn (index)
                     let
                         field $ .unwrap $ .get pairs index
-                        field-key $ .unwrap $ .get field 0
+                        field-key $ &list:nth field 0
                       [] field-key $ div
                         {} $ :style layout/row
                         comp-value states field-key 0
                         =< 2 nil
-                        comp-value (>> states field-key)
-                          .unwrap $ .get field 1
-                          dec level
+                        comp-value (>> states field-key) (&list:nth field 1) (dec level)
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic) (Map Dynamic Dynamic) Number (-> respo.schema/Element)
         'style-folded $ %{} 'CodeEntry (:doc |)

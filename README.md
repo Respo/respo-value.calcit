@@ -7,11 +7,11 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 ### 使用者影响与当前工具链
 
-候选 **0.6.2** 配对正式 **Calcit / @calcit/procs 0.34.1**，继续使用正式 Respo **0.18.0** 与传递 JS-FFI **0.2.9**。消费者须配对升级并重新生成 JS。旧 tag 保持，0.6.2 发布前不引用候选 main/hash。
+0.6.3 配对正式 **Calcit / @calcit/procs 0.34.2**、Respo **0.18.1** 与传递 JS-FFI **0.2.9**；请严格安装完整依赖图并重新生成 JS，发行状态以正式 Git tag 为准。这里保留 0.18 兼容线：Respo 0.19 的 CoordKey 合同仅接受 Tag/String/Number，会限制本组件既有任意异构 Map key 的展示和状态路径，不能直接替换。
 
-固定样式的值收紧为 `String | Number | Tag` union，覆盖 structure、only-text、style-unknown 和 style-folded 四处。已有具体 String 样式保持更窄的类型。公开数据查看入口继续接受任意异构值；不限制可展示的数据或混合游标。
+Map 键值对读取适配 0.34.2 的固定二元类型，使用 `&list:nth` 读取 Map 产生的 pair；索引始终是 0 或 1，不增加断言或强转。Demo 空样式中原先过宽的 Dynamic 标注收窄为已有 `String | Number | Tag` StyleValue union。公开任意值输入、混合游标、已有标量样式 union、原组件和派发行为保持。
 
-官方编辑器同步旧类型写法。运行代码只涉及类型声明，原组件、数据及派发逻辑保持。完整 strict、零动态方法/弃用调用、原六项 native 测试和七项 JS 渲染回归及构建通过，未放宽门禁。实际页面完成 List/Vector/Set/Map 的折叠和展开，console warn/error=[]；未复验 HMR 或其他浏览器。
+本地全部 225 个定义、完整 strict、原六项 native 测试、原七项 JS 渲染/展开折叠回归、文档和构建通过。未增加检查脚本、放宽基线或类型门禁。名义 Struct/Enum 展示缺口仍见下文已知限制；本轮不宣称修复。
 
 ### 用法与真实边界
 
