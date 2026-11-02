@@ -7,7 +7,7 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 ### 使用者影响与当前工具链
 
-0.6.3 配对正式 **Calcit / @calcit/procs 0.34.2**、Respo **0.18.1** 与传递 JS-FFI **0.2.9**；请严格安装完整依赖图并重新生成 JS，发行状态以正式 Git tag 为准。这里保留 0.18 兼容线：Respo 0.19 的 CoordKey 合同仅接受 Tag/String/Number，会限制本组件既有任意异构 Map key 的展示和状态路径，不能直接替换。
+0.6.3 配对正式 **Calcit / @calcit/procs 0.34.2**、Respo **0.18.1** 与传递 JS-FFI **0.2.9**；请严格安装完整依赖图并重新生成 JS，发行状态以正式 Git tag 为准。这里保留 0.18 兼容线：Respo 0.19 的 CoordKey 合同仅接受 Tag/String/Number，会限制本组件既有 Bool/List 等异构 Map key 的展示和状态路径，不能直接替换。迁移方案已反馈 [Respo #341](https://github.com/Respo/respo.calcit/issues/341)；这不代表所有 key 原本都受支持。
 
 Map 键值对读取适配 0.34.2 的固定二元类型，使用 `&list:nth` 读取 Map 产生的 pair；索引始终是 0 或 1，不增加断言或强转。Demo 空样式中原先过宽的 Dynamic 标注收窄为已有 `String | Number | Tag` StyleValue union。公开任意值输入、混合游标、已有标量样式 union、原组件和派发行为保持。
 
@@ -23,7 +23,7 @@ respo-value.comp.value/comp-value (>> states :value) v 0
 
 List/Vector/Set/Map 展开折叠仍派发单个 Enum；dispatch 在进入 updater 前检查真实 Enum。Demo 使用名义 DemoEntry 保留 String 标题与异构值的关系，纯 updater 的测试不装载浏览器 HUD。三个 watcher 的 add/remove key 保持一致；原热更新和页面报错行为保持。
 
-**已知限制：** nominal Struct/Enum 仍可能走 unknown fallback，无法按字段/载荷展开，见 [#55](https://github.com/Respo/respo-value.calcit/issues/55)。本次不将这一展示缺口说成修复，也不为它添加编译器专用 proof/rewrite。覆盖率与 Dynamic 是诊断视图，不代表类型债务清零或所有平台已验收。
+**已知限制：** Map 的 nil key 原本就被 Respo 的 keyed-child non-nil 检查拒绝；Bool key 与 List key 已用 0.6.3 的真实生成 JS/HTML 渲染确认支持，不能把 nil 的既有限制说成 0.19 新回归。nominal Struct/Enum 仍可能走 unknown fallback，无法按字段/载荷展开，见 [#55](https://github.com/Respo/respo-value.calcit/issues/55)。本次不将这一展示缺口说成修复，也不为它添加编译器专用 proof/rewrite。覆盖率与 Dynamic 是诊断视图，不代表类型债务清零或所有平台已验收。
 
 ### 开发与验证
 
