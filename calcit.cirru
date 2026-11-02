@@ -11,7 +11,7 @@
     'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
         'DemoEntry $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct DemoEntry (:label 'String) (:value 'Dynamic)
+          :code $ quote $ defstruct DemoEntry (:label String) (:value Dynamic)
           :examples $ []
           :schema $ quote StructDef
           :tests $ [] $ %{} 'TestEntry (:name |preserves-label-and-falsy-payloads)
@@ -423,7 +423,7 @@
           :code $ quote $ defenum Op
             :states
               quote $ List Dynamic
-              , 'Dynamic
+              , Dynamic
           :examples $ []
           :schema $ quote EnumDef
         'a-bool $ %{} 'CodeEntry (:doc |)
