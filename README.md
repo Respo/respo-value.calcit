@@ -7,11 +7,11 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 ### 使用者影响与当前工具链
 
-候选 **0.6.1** 继续配对正式 **Calcit / @calcit/procs 0.32.1**，依赖升级为正式 Respo **0.18.0** 与传递 JS-FFI **0.2.9**。消费者须协调完整精确图并重新生成 JS；直接构造上游 DomProps 的代码采用 Option 字段。旧 0.6.0 与 0.5 维护线 tag 不移动；0.6.1 发布前不引用候选 main/hash。
+候选 **0.6.2** 配对正式 **Calcit / @calcit/procs 0.34.1**，继续使用正式 Respo **0.18.0** 与传递 JS-FFI **0.2.9**。消费者须配对升级并重新生成 JS。旧 tag 保持，0.6.2 发布前不引用候选 main/hash。
 
-本 PR 仅改 deps.cirru、package.json 与本文档，规范 Snapshot、测试和工作流相对当前 main 不变。发布范围还包含 main 已合并、尚未进入 0.6.0 tag 的 14 处 schema 收紧：配置、演示标量/集合及共享样式等定义补齐真实类型。官方视图对照确认 57 个实际定义的运行代码、原测试和其他元数据与已发布 0.6.0 一致；不是把整个 patch 都说成仅改依赖。上游 Respo 包含真实行为变化，需整图验收。
+固定样式的值收紧为 `String | Number | Tag` union，覆盖 structure、only-text、style-unknown 和 style-folded 四处。已有具体 String 样式保持更窄的类型。公开数据查看入口继续接受任意异构值；不限制可展示的数据或混合游标。
 
-本候选通过正式 tag 正常 Caps strict 安装与工具链配对、Yarn immutable、canonical、224 项全定义、57 项公开定义、完整 strict（diagnostics=[]）、dynamic-method=0、原六项 native、原七项 JS 渲染回归、文档检查和构建。实际页面完成 List/Vector/Set/Map 折叠与展开，普通刷新恢复 Demo 初始状态，console warn/error=[]；未复验 HMR 或其他浏览器，不操作文件、剪贴板或真实数据。57 个本地非 meta 定义仍有 17 partial，不冒称所有异构输入已静态化，原类型门禁不放宽。
+官方编辑器同步旧类型写法。运行代码只涉及类型声明，原组件、数据及派发逻辑保持。完整 strict、零动态方法/弃用调用、原六项 native 测试和七项 JS 渲染回归及构建通过，未放宽门禁。实际页面完成 List/Vector/Set/Map 的折叠和展开，console warn/error=[]；未复验 HMR 或其他浏览器。
 
 ### 用法与真实边界
 

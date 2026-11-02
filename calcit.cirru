@@ -11,7 +11,7 @@
     'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
         'DemoEntry $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct DemoEntry (:label 'String) (:value 'Dynamic)
+          :code $ quote $ defstruct DemoEntry (:label String) (:value Dynamic)
           :examples $ []
           :schema $ quote StructDef
           :tests $ [] $ %{} 'TestEntry (:name |preserves-label-and-falsy-payloads)
@@ -65,10 +65,10 @@
           :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
           :code $ quote $ defn read-states (store)
             let
-                store-map $ decode-map-as store $ :: 'Map 'Tag 'Dynamic
+                store-map $ decode-map-as store $ quote (Map Tag Dynamic)
               decode-map-as
                 .unwrap-or (get store-map :states) ({})
-                :: 'Map 'Dynamic 'Dynamic
+                quote $ Map Dynamic Dynamic
           :examples $ []
           :schema $ quote $ Fn Dynamic
             -> $ Map Dynamic Dynamic
@@ -263,7 +263,7 @@
           :code $ quote $ defn read-cursor (states)
             decode-map-as
               .unwrap $ get states :cursor
-              :: 'List 'Dynamic
+              quote $ List Dynamic
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic)
             -> $ List Dynamic
@@ -284,7 +284,7 @@
               (:some value)
                 decode-map-as
                   either value $ {}
-                  :: 'Map 'Tag 'Dynamic
+                  quote $ Map Tag Dynamic
               (:none) ({})
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic)
@@ -331,7 +331,7 @@
               :color :white
               :border-radius |12px
           :examples $ []
-          :schema $ quote $ Map Tag Dynamic
+          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.value
           :require
@@ -423,7 +423,7 @@
           :code $ quote $ defenum Op
             :states
               quote $ List Dynamic
-              , 'Dynamic
+              , Dynamic
           :examples $ []
           :schema $ quote EnumDef
         'a-bool $ %{} 'CodeEntry (:doc |)
@@ -520,6 +520,9 @@
         :code $ quote $ ns respo-value.style.layout
     'respo-value.style.widget $ %{} 'FileEntry
       :defs $ {}
+        'StyleValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion StyleValue String Number Tag
+          :examples $ []
         'literal $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def literal
             {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 4px")
@@ -536,7 +539,7 @@
           :code $ quote $ def only-text
             {} (:pointer-events |none) (:font-size 14) (:line-height |20px)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
         'structure $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def structure
             {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 2px")
@@ -551,7 +554,7 @@
               :vertical-align |top
               :cursor |pointer
           :examples $ []
-          :schema $ quote $ Map Tag Dynamic
+          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
         'style-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-children
             {} (:display |inline-block) (:vertical-align |top) (:padding |0px)
@@ -568,7 +571,7 @@
           :code $ quote $ def style-unknown
             {} (:color :red) (:font-size 12)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.style.widget
           :require $ respo.util.format :refer $ hsl
@@ -580,9 +583,9 @@
               (:states cursor s)
                 decode-map-as
                   update-states store
-                    decode-map-as cursor $ :: 'List 'Dynamic
+                    decode-map-as cursor $ quote $ List Dynamic
                     , s
-                  :: 'Map 'Tag 'Dynamic
+                  quote $ Map Tag Dynamic
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) Enum String
