@@ -7,16 +7,21 @@ Demo http://repo.respo-mvc.org/value.calcit/ .
 
 ### 使用者影响与当前工具链
 
-0.6.3 配对正式 **Calcit / @calcit/procs 0.34.2**、Respo **0.18.1** 与传递 JS-FFI **0.2.9**；请严格安装完整依赖图并重新生成 JS，发行状态以正式 Git tag 为准。这里保留 0.18 兼容线：Respo 0.19 的 CoordKey 合同仅接受 Tag/String/Number，会限制本组件既有 Bool/List 等异构 Map key 的展示和状态路径，不能直接替换。迁移方案已反馈 [Respo #341](https://github.com/Respo/respo.calcit/issues/341)；这不代表所有 key 原本都受支持。
+0.7.0 候选迁往 Respo 0.19 数据键边界，保留 Bool/List/函数等异构 Map key 的查看、折叠和原始状态路径。只有渲染坐标转为内部稳定 String；不会把状态路径改为 hash、文本或行号。nil Map key 仍拒绝，普通值和公开 `comp-value` 的参数与 Element 返回合同保持。
 
-Map 键值对读取适配 0.34.2 的固定二元类型，使用 `&list:nth` 读取 Map 产生的 pair；索引始终是 0 或 1，不增加断言或强转。Demo 空样式中原先过宽的 Dynamic 标注收窄为已有 `String | Number | Tag` StyleValue union。公开任意值输入、混合游标、已有标量样式 union、原组件和派发行为保持。
+**调用方需要调整渲染入口：** 包含 Map 的查看器必须在同步 managed memo 帧内构造。浏览器使用 `respo.core/render-with!`，SSR/自定义 renderer 使用 `respo.memo/with-memo-frame` 包住建树与渲染；不要先建树再进入帧。Demo 原 renderer/SSR 入口已套用同一作用域，HUD、watcher 和刷新处理保持。嵌套作用域复用外帧；Promise 不延长帧。
 
-本地全部 225 个定义、完整 strict、原六项 native 测试、原七项 JS 渲染/展开折叠回归、文档和构建通过。未增加检查脚本、放宽基线或类型门禁。名义 Struct/Enum 展示缺口仍见下文已知限制；本轮不宣称修复。
+候选配对正式 Calcit / @calcit/procs **0.34.2**、Respo **0.19.2** 与 JS-FFI **0.2.10**。上游 [#343](https://github.com/Respo/respo.calcit/pull/343) 已合并并正式发版；本候选使用正式 tag 严格安装，不把此前隔离源码预验收当成正式安装证据。0.7.0 自身仍须完成原 CI 与最终评审后才发布。
+
+源码预验收已通过全部 229 个定义、完整 strict、原六项 native 测试及八项 JS 回归。隔离 Chrome 验证异构 key 的真实折叠、插入、重排与删除：保留项 DOM 身份不变，派发路径保留原始 false/List key；刷新无控制台错误。原门禁与断言保留，不增加检查 runner 或放宽基线。名义 Struct/Enum 展示限制仍见下文。
+
+0.6.3 的已发布兼容线使用 Respo 0.18.1 / JS-FFI 0.2.9。Map pair 的固定二元读取及已有 StyleValue union 保留，不引入不受检强转。
 
 ### 用法与真实边界
 
 ```cirru.no-check
-respo-value.comp.value/comp-value (>> states :value) v 0
+respo.memo/with-memo-frame $ fn ()
+  make-string $ respo-value.comp.value/comp-value (>> states :value) v 0
 ```
 
 最后一个参数是默认展开层数。公开 `comp-value` 返回 `respo.schema/Element`；Demo 根组件 `comp-container` 返回 `respo.schema/Component`。展示任意异构值的入口仍开放，不伪造 Map/Struct 强转。cursor 必须通过实际 List 检查，folded 状态通过 Bool 检查；缺失或非法 cursor 仍拒绝，false、nil payload、混合 cursor key 与未知 Enum 操作的既有行为保持。
@@ -42,7 +47,7 @@ yarn build:js
 node --test scripts/value-regression.test.mjs
 ```
 
-原完整 strict、公共 API、dynamic-method 零、deprecated、六项附带测试、七项 JS 回归与文档检查保留；不新增验证 runner、质量预算或固定改写规则。历史 [0.29 迁移记录](history/20261005-published-alpha6.md) 不作为本轮配对的验收证据。
+原完整 strict、公共 API、dynamic-method 零、deprecated、六项附带测试、原七项及异构 key JS 回归与文档检查保留；不新增验证 runner、质量预算或固定改写规则。历史 [0.29 迁移记录](history/20261005-published-alpha6.md) 不作为本轮配对的验收证据。
 
 ### 前端 COS/CDN
 
