@@ -40,7 +40,7 @@
                       let
                           entry $ .unwrap $ .get data-table idx
                         [] idx $ comp-section (>> states idx) (:label entry) (:value entry)
-                comp-inspect |States states nil
+                comp-inspect |States states $ {}
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
         'comp-section $ %{} 'CodeEntry (:doc |)
@@ -58,7 +58,7 @@
             [] (DemoEntry :label "|a nil:" :value nil) (DemoEntry :label "|a number:" :value schema/a-number) (DemoEntry :label "|a string:" :value schema/a-string) (DemoEntry :label "|a tag:" :value schema/a-tag) (DemoEntry :label "|a bool:" :value schema/a-bool) (DemoEntry :label "|a function:" :value schema/a-function) (DemoEntry :label "|a list:" :value schema/a-list) (DemoEntry :label "|a vector:" :value schema/a-vector) (DemoEntry :label "|a hash-set:" :value schema/a-hash-set) (DemoEntry :label "|a nested vector:" :value schema/a-nested-vector) (DemoEntry :label "|a hash-map:" :value schema/a-hash-map) (DemoEntry :label "|a nested hash-map:" :value schema/a-nested-hash-map) (DemoEntry :label "|a mixed data:" :value schema/a-mixed-data)
               DemoEntry :label "|an element" :value $ div ({})
                 div $ {} $ :style style-section
-                =< 8 nil
+                space-x 8
           :examples $ []
           :schema $ quote $ List respo-value.comp.container/DemoEntry
         'read-states $ %{} 'CodeEntry
@@ -88,7 +88,7 @@
             respo.util.format :refer $ hsl
             respo-value.comp.value :refer $ comp-value
             respo-value.schema :as schema
-            respo.comp.space :refer $ =<
+            respo.comp.space :refer $ space-x
             respo.comp.inspect :refer $ comp-inspect
             respo.core :refer $ defcomp <> div span list-> >>
             respo-value.style.layout :as layout
@@ -306,7 +306,7 @@
           :code $ quote $ defn render-fields (states xs level)
             let
                 pairs $ .to-list xs
-              list->
+              data-list->
                 {} $ :style $ &merge widget/style-children layout/column
                 ->
                   range $ .len pairs
@@ -314,11 +314,13 @@
                     let
                         field $ .unwrap $ .get pairs index
                         field-key $ &list:nth field 0
-                      [] field-key $ div
-                        {} $ :style layout/row
-                        comp-value states field-key 0
-                        =< 2 nil
-                        comp-value (>> states field-key) (&list:nth field 1) (dec level)
+                      assert-type
+                        [] field-key $ div
+                          {} $ :style layout/row
+                          comp-value states field-key 0
+                          space-x 2
+                          comp-value (data-states states field-key) (&list:nth field 1) (dec level)
+                        quote $ Tuple Dynamic respo.schema/Element
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic) (Map Dynamic Dynamic) Number (-> respo.schema/Element)
         'style-folded $ %{} 'CodeEntry (:doc |)
@@ -336,8 +338,8 @@
             respo.util.format :refer $ hsl
             respo-value.style.widget :as widget
             respo-value.style.layout :as layout
-            respo.core :refer $ defcomp <> div span list-> >>
-            respo.comp.space :refer $ =<
+            respo.core :refer $ defcomp <> div span list-> >> data-list-> data-states
+            respo.comp.space :refer $ space-x
     'respo-value.config $ %{} 'FileEntry
       :defs $ {}
         'dev? $ %{} 'CodeEntry (:doc |)
@@ -390,7 +392,7 @@
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! (renderer)
-            renderer (mount-target) (comp-container @*store) dispatch!
+            memo/with-memo-frame $ fn () $ renderer (mount-target) (comp-container @*store) dispatch!
           :examples $ []
           :schema $ quote $ Fn
             Fn respo.dom/DomElement respo.schema/Component
@@ -414,6 +416,7 @@
             |./calcit.build-errors.mjs :default build-errors
             respo-value.updater :refer $ updater
             respo.ffi.browser :refer $ query-selector
+            respo.memo :as memo
     'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
         'Op $ %{} 'CodeEntry
