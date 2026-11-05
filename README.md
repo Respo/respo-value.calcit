@@ -5,7 +5,15 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
-### 0.7.1 候选：使用者影响与当前工具链
+### 0.7.2 候选：使用者影响
+
+CLI / `@calcit/procs` 配对正式 **0.35.1**、Respo **0.19.4**（JS-FFI **0.2.13**），需统一精确依赖图并重新生成 JS。公开查看器的任意异构输入、Bool/List/函数 key、折叠路径、memo identity 和页面 HUD 保持；正式 tag 发布前仍为候选。
+
+只为固定混合演示常量新增递归 `MixedTree = Number | String | List MixedTree | Map Tag MixedTree`，去掉该常量的一处 Dynamic。原 `NumericTree` 保留更严格的纯数字合同；初始 store 的外层明确为 `Map Tag Dynamic`，内部开放异构状态仍如实保留。两份原数据字面量不变，union 不增加运行时包装，也不用于收窄整个查看器。
+
+相对0.7.1还包含此前已合并 #69 的 AnyEnum 拼写；它与原裸 Enum 为同一类型。原断言、完整 strict、异构 key 回归、COS 内置 verify 与部署路径保持，精确验收结果以 PR 为准。
+
+### 历史 0.7.1：递归数字树与工具链
 
 CLI / `@calcit/procs` 配对正式 **0.35.0**、Respo **0.19.3**（JS-FFI **0.2.12**）。
 消费者需要统一精确依赖图并重新生成 JS；公开 `comp-value` 的任意异构输入、
@@ -17,7 +25,7 @@ Map Tag NumericTree`，分别声明为 `List NumericTree` 与 `Map Tag NumericTr
 此演示模型当作整个查看器的输入合同。其他类型写法由官方 formatter 迁移，
 原测试与类型门禁保留，不新增验证脚本或放宽预算。
 
-本轮完整 strict、230 个定义、原 6 项 native 和 8 项 JS 回归、文档与构建通过，
+0.7.1 的验收记录：完整 strict、230 个定义、原 6 项 native 和 8 项 JS 回归、文档与构建通过，
 dynamic-method / deprecated 为零。实际数字树的静态和回归证据见 PR；
 本轮不引用历史 Chrome 验收作为本次浏览器操作证据。
 

@@ -419,6 +419,9 @@
             respo.memo :as memo
     'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
+        'MixedTree $ %{} 'CodeEntry (:doc "|混合演示常量的递归值类型；不用于限制公开查看器的任意异构输入。")
+          :code $ quote $ defunion MixedTree Number String (List MixedTree) (Map Tag MixedTree)
+          :examples $ []
         'NumericTree $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defunion NumericTree Number (List NumericTree) (Map Tag NumericTree)
           :examples $ []
@@ -461,7 +464,7 @@
             {} $ :a $ [] 1 2
               {} $ :c |str
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag respo-value.schema/MixedTree
         'a-nested-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-nested-hash-map
             {} (:a 1)
@@ -499,7 +502,7 @@
               :states $ {}
               :cursor $ []
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.schema
     'respo-value.style.layout $ %{} 'FileEntry
