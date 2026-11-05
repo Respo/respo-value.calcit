@@ -5,7 +5,24 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
-### 使用者影响与当前工具链
+### 0.7.1 候选：使用者影响与当前工具链
+
+CLI / `@calcit/procs` 配对正式 **0.35.0**、Respo **0.19.3**（JS-FFI **0.2.12**）。
+消费者需要统一精确依赖图并重新生成 JS；公开 `comp-value` 的任意异构输入、
+Bool/List/函数 key、折叠路径、memo identity、HUD 与已知限制保持。
+
+两份纯数字嵌套演示常量补上真实类型：`NumericTree = Number | List NumericTree |
+Map Tag NumericTree`，分别声明为 `List NumericTree` 与 `Map Tag NumericTree`。
+数据字面量没有改动，union 没有运行时包装；移除两处显式 Dynamic，但不把
+此演示模型当作整个查看器的输入合同。其他类型写法由官方 formatter 迁移，
+原测试与类型门禁保留，不新增验证脚本或放宽预算。
+
+本轮完整 strict、230 个定义、原 6 项 native 和 8 项 JS 回归、文档与构建通过，
+dynamic-method / deprecated 为零。实际数字树的静态和回归证据见 PR；
+本轮不引用历史 Chrome 验收作为本次浏览器操作证据。
+
+### 0.7.0 历史迁移
+
 
 0.7.0 候选迁往 Respo 0.19 数据键边界，保留 Bool/List/函数等异构 Map key 的查看、折叠和原始状态路径。只有渲染坐标转为内部稳定 String；不会把状态路径改为 hash、文本或行号。nil Map key 仍拒绝，普通值和公开 `comp-value` 的参数与 Element 返回合同保持。
 
