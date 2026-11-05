@@ -422,6 +422,7 @@
         'MixedTree $ %{} 'CodeEntry (:doc "|混合演示常量的递归值类型；不用于限制公开查看器的任意异构输入。")
           :code $ quote $ defunion MixedTree Number String (List MixedTree) (Map Tag MixedTree)
           :examples $ []
+          :schema $ quote UnionDef
         'NumericTree $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defunion NumericTree Number (List NumericTree) (Map Tag NumericTree)
           :examples $ []

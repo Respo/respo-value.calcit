@@ -5,11 +5,13 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
-### 0.7.2 候选：使用者影响
+### 0.7.3 候选：使用者影响
 
 CLI / `@calcit/procs` 配对正式 **0.35.1**、Respo **0.19.4**（JS-FFI **0.2.13**），需统一精确依赖图并重新生成 JS。公开查看器的任意异构输入、Bool/List/函数 key、折叠路径、memo identity 和页面 HUD 保持；正式 tag 发布前仍为候选。
 
-只为固定混合演示常量新增递归 `MixedTree = Number | String | List MixedTree | Map Tag MixedTree`，去掉该常量的一处 Dynamic。原 `NumericTree` 保留更严格的纯数字合同；初始 store 的外层明确为 `Map Tag Dynamic`，内部开放异构状态仍如实保留。两份原数据字面量不变，union 不增加运行时包装，也不用于收窄整个查看器。
+0.7.3 补齐 `MixedTree: UnionDef` 显式元信息，使源码视图不再将它列为 untyped；不改 union 成员或任何数据/执行表达式。0.7.2 的运行检查不能替代此项声明，旧 tag 不移动。
+
+0.7.2 只为固定混合演示常量新增递归 `MixedTree = Number | String | List MixedTree | Map Tag MixedTree`，去掉该常量的一处 Dynamic。原 `NumericTree` 保留更严格的纯数字合同；初始 store 的外层明确为 `Map Tag Dynamic`，内部开放异构状态仍如实保留。两份原数据字面量不变，union 不增加运行时包装，也不用于收窄整个查看器。
 
 相对0.7.1还包含此前已合并 #69 的 AnyEnum 拼写；它与原裸 Enum 为同一类型。原断言、完整 strict、异构 key 回归、COS 内置 verify 与部署路径保持，精确验收结果以 PR 为准。
 
