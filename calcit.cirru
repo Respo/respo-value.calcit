@@ -65,10 +65,10 @@
           :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
           :code $ quote $ defn read-states (store)
             let
-                store-map $ decode-map-as store $ quote (Map Tag Dynamic)
+                store-map $ decode-map-as store $ Map Tag Dynamic
               decode-map-as
                 .unwrap-or (get store-map :states) ({})
-                quote $ Map Dynamic Dynamic
+                Map Dynamic Dynamic
           :examples $ []
           :schema $ quote $ Fn Dynamic
             -> $ Map Dynamic Dynamic
@@ -263,7 +263,7 @@
           :code $ quote $ defn read-cursor (states)
             decode-map-as
               .unwrap $ get states :cursor
-              quote $ List Dynamic
+              List Dynamic
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic)
             -> $ List Dynamic
@@ -284,7 +284,7 @@
               (:some value)
                 decode-map-as
                   either value $ {}
-                  quote $ Map Tag Dynamic
+                  Map Tag Dynamic
               (:none) ({})
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic)
@@ -320,7 +320,7 @@
                           comp-value states field-key 0
                           space-x 2
                           comp-value (data-states states field-key) (&list:nth field 1) (dec level)
-                        quote $ Tuple Dynamic respo.schema/Element
+                        Tuple Dynamic respo.schema/Element
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic) (Map Dynamic Dynamic) Number (-> respo.schema/Element)
         'style-folded $ %{} 'CodeEntry (:doc |)
@@ -419,12 +419,14 @@
             respo.memo :as memo
     'respo-value.schema $ %{} 'FileEntry
       :defs $ {}
+        'NumericTree $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion NumericTree Number (List NumericTree) (Map Tag NumericTree)
+          :examples $ []
+          :schema $ quote UnionDef
         'Op $ %{} 'CodeEntry
           :doc "|Dispatch Op of the demo app, bound to the :dispatch-op type slot."
           :code $ quote $ defenum Op
-            :states
-              quote $ List Dynamic
-              , Dynamic
+            :states (List Dynamic) Dynamic
           :examples $ []
           :schema $ quote EnumDef
         'a-bool $ %{} 'CodeEntry (:doc |)
@@ -467,14 +469,14 @@
                 :d $ {} $ :e 4
                 :f 5
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag respo-value.schema/NumericTree
         'a-nested-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-nested-vector
             [] 1 2
               [] 3 4 $ [] 5 6
               , 7
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ List respo-value.schema/NumericTree
         'a-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-number 1
           :examples $ []
@@ -584,9 +586,9 @@
               (:states cursor s)
                 decode-map-as
                   update-states store
-                    decode-map-as cursor $ quote $ List Dynamic
+                    decode-map-as cursor $ List Dynamic
                     , s
-                  quote $ Map Tag Dynamic
+                  Map Tag Dynamic
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) Enum String
