@@ -591,7 +591,7 @@
                   Map Tag Dynamic
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) Enum String
+          :schema $ quote $ Fn (Map Tag Dynamic) AnyEnum String
             -> $ Map Tag Dynamic
           :tests $ []
             %{} 'TestEntry (:name |preserves-mixed-cursor-and-store)
