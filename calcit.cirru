@@ -595,7 +595,7 @@
                   Map Tag Dynamic
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) AnyEnum String
+          :schema $ quote $ Fn (Map Tag Dynamic) respo-value.schema/Op String
             -> $ Map Tag Dynamic
           :tests $ []
             %{} 'TestEntry (:name |preserves-mixed-cursor-and-store)
@@ -619,7 +619,7 @@
                   , |test
               :tags $ #{} :alpha4-boundary :unit
             %{} 'TestEntry (:name |rejects-non-list-cursor)
-              :code $ quote $ assert= "|decode-map-as failed at $: expected list, got number"
+              :code $ quote $ assert= "|%:: enum `Op::states` payload 1 expects type `list<dynamic>`, but received `number` (123)"
                 try
                   do
                     updater
@@ -630,13 +630,6 @@
                   fn (message)
                     hint-fn $ Fn String $ -> String
                     , message
-              :tags $ #{} :alpha4-boundary :unit
-            %{} 'TestEntry (:name |preserves-unknown-operation)
-              :code $ quote $ let
-                  store $ {}
-                    :states $ {}
-                    :value |unchanged
-                assert= store $ updater store (:: :unknown) |test
               :tags $ #{} :alpha4-boundary :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.updater
