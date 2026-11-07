@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'respo-value.main/main!) (:mode :js) (:reload-fn 'respo-value.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/
-      :type-slots $ {} $ :dispatch-op |respo-value.schema/Op
+      :type-slots $ {} $ :dispatch-op 'respo-value.schema/Op
   :files $ {}
     'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
