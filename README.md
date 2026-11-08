@@ -5,9 +5,11 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
-### 0.7.4 候选 / Calcit 0.37.0
+### 0.7.4 候选 / Calcit 0.38.0
 
-使用者注意：CLI、`deps.cirru :calcit-version` 与 `@calcit/procs` 同步正式 **0.37.0**，配对正式 Respo **0.19.5**（传递 JS-FFI **0.2.13**）。0.37.0 把字符串写的 type slot 绑定改为载入错误；本版用官方 `edit format` 把 entry 里的 `:dispatch-op` 绑定改成 symbol，运行逻辑与公开 API 不变。下游固定本版 tag 后重新安装并生成 JS。
+使用者需要将 CLI、`deps.cirru :calcit-version` 与 `@calcit/procs` 对齐到正式 **0.38.0** 并重新生成 JS。依赖配对正式 Respo **0.19.5** 与传递 JS-FFI **0.2.13**。公开查看器仍支持异构数据，Bool、List 和函数键仍可参与折叠，Map 视图沿用同步 managed memo 帧。
+
+List、Vector、Set 的内部渲染保留元素类型，Map 通过 `map-list-kv` 将原始键与渲染结果配成二元组，键值类型分别贯穿到字段读取。原有异构状态和公开查看入口继续按开放数据处理。
 
 ### 历史 0.7.3：使用者影响
 
@@ -82,7 +84,7 @@ node --test scripts/value-regression.test.mjs
 
 ### 前端 COS/CDN
 
-CI 使用同一 CDN URL 构建和上传 dist，COS Action 1.2.0 的 public-base-url 执行内置校验。PR 使用 pr/编号/run/attempt 隔离目录；Actions 改用已核对的精确正式 tag（tag 可移动，沿用已接受风险），排队、SSH 主机密钥与生产 COS/rsync 路径保持，不增加重复上传校验脚本。合并会触发原 Demo 部署，不代表允许合并或部署 Recollect 等下游应用；Git tag 与实际发布状态以最新 PR/main 验收为准。
+CI 使用同一 CDN URL 构建和上传 dist，COS Action 1.3.0 的 public-base-url 执行内置校验。PR 使用 pr/编号/run/attempt 隔离目录；Actions 改用已核对的精确正式 tag（tag 可移动，沿用已接受风险），排队、SSH 主机密钥与生产 COS/rsync 路径保持，不增加重复上传校验脚本。合并会触发原 Demo 部署，不代表允许合并或部署 Recollect 等下游应用；Git tag 与实际发布状态以最新 PR/main 验收为准。
 
 Based on https://github.com/Respo/respo-value .
 
