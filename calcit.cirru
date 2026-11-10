@@ -33,13 +33,10 @@
               div
                 {} $ :style layout/container
                 span $ {}
-                list-> ({})
-                  ->
-                    range $ .len data-table
-                    map $ fn (idx)
-                      let
-                          entry $ .unwrap $ .get data-table idx
-                        [] idx $ comp-section (>> states idx) (:label entry) (:value entry)
+                keyed-> ({})
+                  map-indexed data-table $ fn (idx entry)
+                    hint-fn $ Fn Number respo-value.comp.container/DemoEntry $ -> respo.schema/ChildPair
+                    keyed-element idx $ comp-section (>> states idx) (:label entry) (:value entry)
                 comp-inspect |States states $ {}
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
@@ -90,7 +87,7 @@
             respo-value.schema :as schema
             respo.comp.space :refer $ space-x
             respo.comp.inspect :refer $ comp-inspect
-            respo.core :refer $ defcomp <> div span list-> >>
+            respo.core :refer $ defcomp <> div span keyed-> keyed-element >>
             respo-value.style.layout :as layout
             respo-value.style.widget :as widget
     'respo-value.comp.value $ %{} 'FileEntry
@@ -292,14 +289,10 @@
             :features :js-ffi
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (states xs level)
-            list->
+            keyed->
               {} $ :style $ &merge widget/style-children layout/column
-              ->
-                range $ .len xs
-                map $ fn (index)
-                  [] index $ comp-value (>> states index)
-                    .unwrap $ .get xs index
-                    dec level
+              map-indexed xs $ fn (index child)
+                keyed-element index $ comp-value (>> states index) child $ dec level
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic) (List T) Number (-> respo.schema/Element) (:generics T)
         'render-fields $ %{} 'CodeEntry (:doc |)
@@ -330,7 +323,7 @@
             respo.util.format :refer $ hsl
             respo-value.style.widget :as widget
             respo-value.style.layout :as layout
-            respo.core :refer $ defcomp <> div span list-> >> data-list-> data-states
+            respo.core :refer $ defcomp <> div span keyed-> keyed-element >> data-list-> data-states
             respo.comp.space :refer $ space-x
     'respo-value.config $ %{} 'FileEntry
       :defs $ {}
