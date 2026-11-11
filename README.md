@@ -5,9 +5,9 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
-### 0.7.4 候选 / Calcit 0.40.0
+### 0.7.5 候选 / Calcit 0.41.0
 
-使用者需要将 CLI、`deps.cirru :calcit-version` 与 `@calcit/procs` 对齐到正式 **0.40.0** 并重新生成 JS。依赖配对正式 Respo **0.19.5** 与传递 JS-FFI **0.2.13**。公开查看器仍支持异构数据，Bool、List 和函数键仍可参与折叠，Map 视图沿用同步 managed memo 帧。
+使用者需要将 CLI、`deps.cirru :calcit-version` 与 `@calcit/procs` 对齐到正式 **0.41.0** 并重新生成 JS。依赖配对正式 Respo **0.19.5** 与传递 JS-FFI **0.2.13**。公开查看器仍支持异构数据，Bool、List 和函数键仍可参与折叠，Map 视图沿用同步 managed memo 帧。
 
 List、Vector、Set 的内部渲染保留元素类型，Map 通过 `map-list-kv` 将原始键与渲染结果配成二元组，键值类型分别贯穿到字段读取。原有异构状态和公开查看入口继续按开放数据处理。
 
