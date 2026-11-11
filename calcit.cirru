@@ -49,7 +49,7 @@
                 {} $ :style style-value
                 comp-value states value 1
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) String Dynamic (-> respo.schema/Element)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) String Value (-> respo.schema/Element) (:generics Value)
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
             [] (DemoEntry :label "|a nil:" :value nil) (DemoEntry :label "|a number:" :value schema/a-number) (DemoEntry :label "|a string:" :value schema/a-string) (DemoEntry :label "|a tag:" :value schema/a-tag) (DemoEntry :label "|a bool:" :value schema/a-bool) (DemoEntry :label "|a function:" :value schema/a-function) (DemoEntry :label "|a list:" :value schema/a-list) (DemoEntry :label "|a vector:" :value schema/a-vector) (DemoEntry :label "|a hash-set:" :value schema/a-hash-set) (DemoEntry :label "|a nested vector:" :value schema/a-nested-vector) (DemoEntry :label "|a hash-map:" :value schema/a-hash-map) (DemoEntry :label "|a nested hash-map:" :value schema/a-nested-hash-map) (DemoEntry :label "|a mixed data:" :value schema/a-mixed-data)
@@ -57,7 +57,7 @@
                 div $ {} $ :style style-section
                 space-x 8
           :examples $ []
-          :schema $ quote $ List respo-value.comp.container/DemoEntry
+          :schema $ quote $ List DemoEntry
         'read-states $ %{} 'CodeEntry
           :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
           :code $ quote $ defn read-states (store)
@@ -78,7 +78,7 @@
         'style-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-value ({})
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
+          :schema $ quote $ Map Tag widget/StyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.container
           :require
@@ -262,8 +262,9 @@
               .unwrap $ get states :cursor
               List Dynamic
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic)
+          :schema $ quote $ Fn (Map Dynamic StateValue)
             -> $ List Dynamic
+            :generics StateValue
             :features :js-ffi
         'read-folded $ %{} 'CodeEntry
           :doc "|Narrow the optional folded flag stored in dynamic component state."
@@ -273,7 +274,7 @@
                 decode-map-as (either value fallback) 'Bool
               (:none) fallback
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) Bool (-> Bool) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic StateValue) Bool (-> Bool) (:generics StateValue) (:features :js-ffi)
         'read-state-data $ %{} 'CodeEntry
           :doc "|Narrow the dynamic component-state payload to the map used by this inspector."
           :code $ quote $ defn read-state-data (states)
@@ -284,8 +285,9 @@
                   Map Tag Dynamic
               (:none) ({})
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic)
+          :schema $ quote $ Fn (Map Dynamic StateValue)
             -> $ Map Tag Dynamic
+            :generics StateValue
             :features :js-ffi
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (states xs level)
@@ -316,7 +318,7 @@
               :color :white
               :border-radius |12px
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
+          :schema $ quote $ Map Tag widget/StyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.comp.value
           :require
@@ -351,7 +353,7 @@
               reset! *store store
               , &unit
           :examples $ []
-          :schema $ quote $ Fn respo-value.schema/Op (-> Unit)
+          :schema $ quote $ Fn schema/Op (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if ssr? $ render-app! realize-ssr!
@@ -381,7 +383,7 @@
           :examples $ []
           :schema $ quote $ Fn
             Fn respo.dom/DomElement respo.schema/Component
-              Fn respo-value.schema/Op $ -> Unit
+              Fn schema/Op $ -> Unit
               -> Unit
               :features :js-ffi
             -> Unit
@@ -450,7 +452,7 @@
             {} $ :a $ [] 1 2
               {} $ :c |str
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.schema/MixedTree
+          :schema $ quote $ Map Tag MixedTree
         'a-nested-hash-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-nested-hash-map
             {} (:a 1)
@@ -458,14 +460,14 @@
                 :d $ {} $ :e 4
                 :f 5
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.schema/NumericTree
+          :schema $ quote $ Map Tag NumericTree
         'a-nested-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-nested-vector
             [] 1 2
               [] 3 4 $ [] 5 6
               , 7
           :examples $ []
-          :schema $ quote $ List respo-value.schema/NumericTree
+          :schema $ quote $ List NumericTree
         'a-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-number 1
           :examples $ []
@@ -531,7 +533,7 @@
           :code $ quote $ def only-text
             {} (:pointer-events |none) (:font-size 14) (:line-height |20px)
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
+          :schema $ quote $ Map Tag StyleValue
         'structure $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def structure
             {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 2px")
@@ -546,7 +548,7 @@
               :vertical-align |top
               :cursor |pointer
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
+          :schema $ quote $ Map Tag StyleValue
         'style-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-children
             {} (:display |inline-block) (:vertical-align |top) (:padding |0px)
@@ -563,7 +565,7 @@
           :code $ quote $ def style-unknown
             {} (:color :red) (:font-size 12)
           :examples $ []
-          :schema $ quote $ Map Tag respo-value.style.widget/StyleValue
+          :schema $ quote $ Map Tag StyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns respo-value.style.widget
           :require $ respo.util.format :refer $ hsl
@@ -593,7 +595,7 @@
                     , |test
                 assert= (Result :ok 42)
                   get-in result $ [] :states :value |branch 7 :data
-                assert= (Option :some |unchanged) (get result :value)
+                assert= (Some |unchanged) (get result :value)
               :tags $ #{} :alpha4-boundary :unit
             %{} 'TestEntry (:name |preserves-root-nil-payload)
               :code $ quote $ assert=
