@@ -129,7 +129,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (List T) Number (-> respo.schema/Element) (:generics T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T)
         'comp-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-map (states x level)
             let
@@ -155,7 +155,7 @@
                   <> |{} widget/only-text
                   render-fields states x level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (Map K V) Number (-> respo.schema/Element) (:generics K V)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (Map K V) Number (-> respo.schema/Element) (:generics StateValue K V)
         'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-nil ()
             <> |nil $ &merge widget/literal $ {}
@@ -193,7 +193,7 @@
                   <> (str |#{}) widget/only-text
                   render-children states (.to-list x) level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (Set T) Number (-> respo.schema/Element) (:generics T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (Set T) Number (-> respo.schema/Element) (:generics StateValue T)
         'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-string (x)
             span
@@ -229,7 +229,7 @@
                 true $ div $ {} (:style widget/style-unknown)
                   :inner-text $ str-spaced |unknown $ to-lispy-string x
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic Number (-> respo.schema/Element)
+          :schema $ quote $ Fn (Map Dynamic StateValue) T Number (-> respo.schema/Element) (:generics StateValue T)
         'comp-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-vector (states x level)
             let
@@ -254,7 +254,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (List T) Number (-> respo.schema/Element) (:generics T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T)
         'read-cursor $ %{} 'CodeEntry
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
@@ -296,7 +296,7 @@
               map-indexed xs $ fn (index child)
                 keyed-element index $ comp-value (>> states index) child $ dec level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (List T) Number (-> respo.schema/Element) (:generics T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T)
         'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-fields (states xs level)
             data-list->
@@ -309,7 +309,7 @@
                   space-x 2
                   comp-value (data-states states field-key) field-value $ dec level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (Map K V) Number (-> respo.schema/Element) (:generics K V)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (Map K V) Number (-> respo.schema/Element) (:generics StateValue K V)
         'style-folded $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-folded
             {}
