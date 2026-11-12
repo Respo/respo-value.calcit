@@ -11,21 +11,31 @@
     'respo-value.comp.container $ %{} 'FileEntry
       :defs $ {}
         'DemoEntry $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct DemoEntry (:label String) (:value Dynamic)
+          :code $ quote $ defstruct DemoEntry (:label String)
+            :value $ Option DemoValue
           :examples $ []
           :schema $ quote StructDef
           :tests $ [] $ %{} 'TestEntry (:name |preserves-label-and-falsy-payloads)
             :code $ quote $ let
-                nil-entry $ DemoEntry :label |nil :value nil
-                false-entry $ DemoEntry :label |false :value false
-                zero-entry $ DemoEntry :label |zero :value 0
-                empty-entry $ DemoEntry :label |empty :value |
+                nil-entry $ DemoEntry :label |nil :value None
+                false-entry $ DemoEntry :label |false :value $ Some false
+                zero-entry $ DemoEntry :label |zero :value $ Some 0
+                empty-entry $ DemoEntry :label |empty :value $ Some |
               assert= |nil $ :label nil-entry
-              assert= nil $ :value nil-entry
-              assert= false $ :value false-entry
-              assert= 0 $ :value zero-entry
-              assert= | $ :value empty-entry
+              assert= None $ :value nil-entry
+              assert= (Some false) (:value false-entry)
+              assert= (Some 0) (:value zero-entry)
+              assert= (Some |) (:value empty-entry)
             :tags $ #{} :unit :value-boundary
+        'DemoValue $ %{} 'CodeEntry (:doc "|Concrete sample types used by the demo table.")
+          :code $ quote $ defunion DemoValue Number String Tag Bool
+            Fn Number $ -> Number
+            List schema/NumericTree
+            Set Number
+            Map Tag schema/MixedTree
+            , respo.schema/Element
+          :examples $ []
+          :schema $ quote UnionDef
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container (store)
             let
@@ -36,7 +46,11 @@
                 keyed-> ({})
                   map-indexed data-table $ fn (idx entry)
                     hint-fn $ Fn Number DemoEntry $ -> respo.schema/ChildPair
-                    keyed-element idx $ comp-section (>> states idx) (:label entry) (:value entry)
+                    keyed-element idx $ match (:value entry)
+                      (:some value)
+                        comp-section (>> states idx) (:label entry) value
+                      (:none)
+                        comp-section (>> states idx) (:label entry) nil
                 comp-inspect |States states $ {}
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
@@ -52,8 +66,20 @@
           :schema $ quote $ Fn (Map Dynamic StateValue) String Value (-> respo.schema/Element) (:generics StateValue Value)
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
-            [] (DemoEntry :label "|a nil:" :value nil) (DemoEntry :label "|a number:" :value schema/a-number) (DemoEntry :label "|a string:" :value schema/a-string) (DemoEntry :label "|a tag:" :value schema/a-tag) (DemoEntry :label "|a bool:" :value schema/a-bool) (DemoEntry :label "|a function:" :value schema/a-function) (DemoEntry :label "|a list:" :value schema/a-list) (DemoEntry :label "|a vector:" :value schema/a-vector) (DemoEntry :label "|a hash-set:" :value schema/a-hash-set) (DemoEntry :label "|a nested vector:" :value schema/a-nested-vector) (DemoEntry :label "|a hash-map:" :value schema/a-hash-map) (DemoEntry :label "|a nested hash-map:" :value schema/a-nested-hash-map) (DemoEntry :label "|a mixed data:" :value schema/a-mixed-data)
-              DemoEntry :label "|an element" :value $ div ({})
+            [] (DemoEntry :label "|a nil:" :value None)
+              DemoEntry :label "|a number:" :value $ Some schema/a-number
+              DemoEntry :label "|a string:" :value $ Some schema/a-string
+              DemoEntry :label "|a tag:" :value $ Some schema/a-tag
+              DemoEntry :label "|a bool:" :value $ Some schema/a-bool
+              DemoEntry :label "|a function:" :value $ Some schema/a-function
+              DemoEntry :label "|a list:" :value $ Some schema/a-list
+              DemoEntry :label "|a vector:" :value $ Some schema/a-vector
+              DemoEntry :label "|a hash-set:" :value $ Some schema/a-hash-set
+              DemoEntry :label "|a nested vector:" :value $ Some schema/a-nested-vector
+              DemoEntry :label "|a hash-map:" :value $ Some schema/a-hash-map
+              DemoEntry :label "|a nested hash-map:" :value $ Some schema/a-nested-hash-map
+              DemoEntry :label "|a mixed data:" :value $ Some schema/a-mixed-data
+              DemoEntry :label "|an element" :value $ Some $ div ({})
                 div $ {} $ :style style-section
                 space-x 8
           :examples $ []
@@ -353,14 +379,14 @@
               reset! *store store
               , &unit
           :examples $ []
-          :schema $ quote $ Fn schema/Op (-> Unit)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :io :state)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if ssr? $ render-app! realize-ssr!
             render-app! render!
             add-watch! *store :rerender $ fn (prev store) (render-app! render!)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
             .unwrap $ query-selector |.app
@@ -376,7 +402,7 @@
               hud! |error build-errors
             println "|Code updated."
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! (renderer)
             memo/with-memo-frame $ fn () $ renderer (mount-target) (comp-container @*store) dispatch!
@@ -387,7 +413,7 @@
               -> Unit
               :features :js-ffi
             -> Unit
-            :features :js-ffi
+            :features :io :js-ffi :state
         'ssr? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ssr?
             .some? $ query-selector |meta.respo-ssr
@@ -585,6 +611,7 @@
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) respo-value.schema/Op String
             -> $ Map Tag Dynamic
+            :features :io
           :tests $ []
             %{} 'TestEntry (:name |preserves-mixed-cursor-and-store)
               :code $ quote $ let
