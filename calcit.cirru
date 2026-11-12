@@ -35,7 +35,7 @@
                 span $ {}
                 keyed-> ({})
                   map-indexed data-table $ fn (idx entry)
-                    hint-fn $ Fn Number respo-value.comp.container/DemoEntry $ -> respo.schema/ChildPair
+                    hint-fn $ Fn Number DemoEntry $ -> respo.schema/ChildPair
                     keyed-element idx $ comp-section (>> states idx) (:label entry) (:value entry)
                 comp-inspect |States states $ {}
           :examples $ []
@@ -49,7 +49,7 @@
                 {} $ :style style-value
                 comp-value states value 1
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) String Value (-> respo.schema/Element) (:generics Value)
+          :schema $ quote $ Fn (Map Dynamic StateValue) String Value (-> respo.schema/Element) (:generics StateValue Value)
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
             [] (DemoEntry :label "|a nil:" :value nil) (DemoEntry :label "|a number:" :value schema/a-number) (DemoEntry :label "|a string:" :value schema/a-string) (DemoEntry :label "|a tag:" :value schema/a-tag) (DemoEntry :label "|a bool:" :value schema/a-bool) (DemoEntry :label "|a function:" :value schema/a-function) (DemoEntry :label "|a list:" :value schema/a-list) (DemoEntry :label "|a vector:" :value schema/a-vector) (DemoEntry :label "|a hash-set:" :value schema/a-hash-set) (DemoEntry :label "|a nested vector:" :value schema/a-nested-vector) (DemoEntry :label "|a hash-map:" :value schema/a-hash-map) (DemoEntry :label "|a nested hash-map:" :value schema/a-nested-hash-map) (DemoEntry :label "|a mixed data:" :value schema/a-mixed-data)
@@ -517,6 +517,7 @@
         'StyleValue $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defunion StyleValue String Number Tag
           :examples $ []
+          :schema $ quote UnionDef
         'literal $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def literal
             {} (:line-height |16px) (:border-radius |4px) (:padding "|0px 4px")
