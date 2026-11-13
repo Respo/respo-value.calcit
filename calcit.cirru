@@ -53,7 +53,7 @@
                         comp-section (>> states idx) (:label entry) nil
                 comp-inspect |States states $ {}
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
+          :schema $ quote $ Fn (Map Tag V) (-> respo.schema/Component) (:generics V)
         'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-section (states hint value)
             div
@@ -85,16 +85,15 @@
           :examples $ []
           :schema $ quote $ List DemoEntry
         'read-states $ %{} 'CodeEntry
-          :doc "|Narrow the heterogeneous Respo store boundary to its state tree."
+          :doc "|Narrow the demo store's state tree while retaining the caller's map value type."
           :code $ quote $ defn read-states (store)
-            let
-                store-map $ decode-map-as store $ Map Tag Dynamic
-              decode-map-as
-                .unwrap-or (get store-map :states) ({})
-                Map Dynamic Dynamic
+            decode-map-as
+              .unwrap-or (get store :states) ({})
+              Map Dynamic Dynamic
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn (Map Tag V)
             -> $ Map Dynamic Dynamic
+            :generics V
             :features :js-ffi
         'style-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-section
