@@ -601,11 +601,7 @@
           :code $ quote $ defn updater (store op op-id) (; println store op)
             match op
               (:states cursor s)
-                decode-map-as
-                  update-states store
-                    decode-map-as cursor $ List Dynamic
-                    , s
-                  Map Tag Dynamic
+                decode-map-as (update-states store cursor s) (Map Tag Dynamic)
               _ $ do (eprintln "|Unknown op:" op) store
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) respo-value.schema/Op String
