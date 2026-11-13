@@ -299,7 +299,7 @@
                 decode-map-as (either value fallback) 'Bool
               (:none) fallback
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) Bool (-> Bool) (:generics StateValue) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag StateValue) Bool (-> Bool) (:generics StateValue) (:features :js-ffi)
         'read-state-data $ %{} 'CodeEntry
           :doc "|Narrow the dynamic component-state payload to the map used by this inspector."
           :code $ quote $ defn read-state-data (states)
