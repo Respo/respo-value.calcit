@@ -90,6 +90,7 @@ jobs:
         echo "prefix=${asset_prefix}" >> "$GITHUB_OUTPUT"
         echo "base-url=${VITE_BASE_URL}" >> "$GITHUB_OUTPUT"
         yarn build:js
+        calcit --reload-fn respo.render.html/make-string js
         node --test scripts/value-regression.test.mjs
 
     - name: Check COS credentials

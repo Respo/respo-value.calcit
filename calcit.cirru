@@ -53,7 +53,7 @@
                         comp-section (>> states idx) (:label entry) nil
                 comp-inspect |States states $ {}
           :examples $ []
-          :schema $ quote $ Fn (Map Tag V) (-> respo.schema/Component) (:generics V)
+          :schema $ quote $ Fn (Map Tag V) (-> respo.schema/Component) (:generics V) (:features :state)
         'comp-section $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-section (states hint value)
             div
@@ -63,7 +63,7 @@
                 {} $ :style style-value
                 comp-value states value 1
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) String Value (-> respo.schema/Element) (:generics StateValue Value)
+          :schema $ quote $ Fn (Map Dynamic StateValue) String Value (-> respo.schema/Element) (:generics StateValue Value) (:features :state)
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
             [] (DemoEntry :label "|a nil:" :value None)
@@ -154,7 +154,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T) (:features :state)
         'comp-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-map (states x level)
             let
@@ -180,7 +180,7 @@
                   <> |{} widget/only-text
                   render-fields states x level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) (Map K V) Number (-> respo.schema/Element) (:generics StateValue K V)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (Map K V) Number (-> respo.schema/Element) (:generics StateValue K V) (:features :state)
         'comp-nil $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-nil ()
             <> |nil $ &merge widget/literal $ {}
@@ -218,7 +218,7 @@
                   <> (str |#{}) widget/only-text
                   render-children states (.to-list x) level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) (Set T) Number (-> respo.schema/Element) (:generics StateValue T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (Set T) Number (-> respo.schema/Element) (:generics StateValue T) (:features :state)
         'comp-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-string (x)
             span
@@ -254,7 +254,7 @@
                 true $ div $ {} (:style widget/style-unknown)
                   :inner-text $ str-spaced |unknown $ to-lispy-string x
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) T Number (-> respo.schema/Element) (:generics StateValue T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) T Number (-> respo.schema/Element) (:generics StateValue T) (:features :state)
         'comp-vector $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-vector (states x level)
             let
@@ -279,7 +279,7 @@
                   <> (str |[]) widget/only-text
                   render-children states x level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T) (:features :state)
         'read-cursor $ %{} 'CodeEntry
           :doc "|Narrow a Respo component-state cursor at the framework boundary."
           :code $ quote $ defn read-cursor (states)
@@ -321,7 +321,7 @@
               map-indexed xs $ fn (index child)
                 keyed-element index $ comp-value (>> states index) child $ dec level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (List T) Number (-> respo.schema/Element) (:generics StateValue T) (:features :state)
         'render-fields $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-fields (states xs level)
             data-list->
@@ -334,7 +334,7 @@
                   space-x 2
                   comp-value (data-states states field-key) field-value $ dec level
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) (Map K V) Number (-> respo.schema/Element) (:generics StateValue K V)
+          :schema $ quote $ Fn (Map Dynamic StateValue) (Map K V) Number (-> respo.schema/Element) (:generics StateValue K V) (:features :state)
         'style-folded $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-folded
             {}
@@ -408,9 +408,9 @@
           :examples $ []
           :schema $ quote $ Fn
             Fn respo.dom/DomElement respo.schema/Component
-              Fn schema/Op $ -> Unit
+              Fn schema/Op (-> Unit) (:features :io :state)
               -> Unit
-              :features :js-ffi
+              :features :io :js-ffi :state
             -> Unit
             :features :io :js-ffi :state
         'ssr? $ %{} 'CodeEntry (:doc |)
