@@ -5,6 +5,10 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
+### 0.7.9 / 正式依赖对齐
+
+配对 Calcit 0.44.0、Respo 0.19.13 与传递 JS-FFI 0.2.19，重新安装并生成 JS。异构输入、键和折叠行为保持不变。
+
 ### 0.7.8 / Calcit 0.44.0
 
 使用者需要将 CLI、`deps.cirru :calcit-version` 与 `@calcit/procs` 对齐到正式 **0.44.0** 并重新生成 JS。依赖配对正式 Respo **0.19.12** 与传递 JS-FFI **0.2.18**。公开查看器仍支持异构数据，Bool、List 和函数键仍可参与折叠，Map 视图沿用同步 managed memo 帧。
