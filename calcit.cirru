@@ -629,12 +629,13 @@
                   , |test
               :tags $ #{} :alpha4-boundary :unit
             %{} 'TestEntry (:name |rejects-non-list-cursor)
-              :code $ quote $ assert= "|%:: enum `Op::states` payload 1 expects type `list<dynamic>`, but received `number` (123)"
-                try
+              :code $ quote $ let
+                  invalid $ parse-cirru-edn "|do 123"
+                assert= "|%:: enum `Op::states` payload 1 expects type `list<dynamic>`, but received `number` (123)" $ try
                   do
                     updater
                       {} $ :states $ {}
-                      :: :states 123 nil
+                      :: :states invalid nil
                       , |test
                     , |unexpected-success
                   fn (message)

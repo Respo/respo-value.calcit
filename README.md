@@ -5,6 +5,10 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
+### 0.7.12 候选 / Calcit 0.45.0
+
+配对 Calcit / `@calcit/procs` 0.45.0 和正式 Respo 0.19.17，重新安装依赖并生成 JS。异构输入、键和折叠行为沿用原合同；正式标签发布后再升级。
+
 ### 0.7.11 / 正式依赖对齐
 
 配对 Calcit 0.44.0、正式 Respo 0.19.16 与传递 JS-FFI 0.2.23，重新安装并生成 JS。异构输入、键和折叠行为保持不变；请在正式 tag 发布后升级。
