@@ -63,7 +63,7 @@
                 {} $ :style style-value
                 comp-value states value 1
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic StateValue) String Value (-> respo.schema/Element) (:generics StateValue Value) (:features :state)
+          :schema $ quote $ Fn (Map StateKey StateValue) String Value (-> respo.schema/Element) (:generics StateKey StateValue Value) (:features :state)
         'data-table $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def data-table
             [] (DemoEntry :label "|a nil:" :value None)
