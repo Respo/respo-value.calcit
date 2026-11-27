@@ -133,8 +133,7 @@
           :code $ quote $ defn comp-list (states x level)
             let
                 cursor $ read-cursor states
-                state $ either (read-state-data states)
-                  {} $ :folded? $ < level 1
+                state $ read-state-data states
                 folded? $ read-folded state $ < level 1
               if
                 and folded? $ not $ empty? x
@@ -159,8 +158,7 @@
           :code $ quote $ defn comp-map (states x level)
             let
                 cursor $ read-cursor states
-                state $ either (read-state-data states)
-                  {} $ :folded? $ < level 1
+                state $ read-state-data states
                 folded? $ read-folded state $ < level 1
               if
                 and folded? $ not $ empty? x
@@ -197,8 +195,7 @@
           :code $ quote $ defn comp-set (states x level)
             let
                 cursor $ read-cursor states
-                state $ either (read-state-data states)
-                  {} $ :folded? $ < level 1
+                state $ read-state-data states
                 folded? $ read-folded state $ < level 1
               if
                 and folded? $ not $ empty? x
@@ -238,21 +235,18 @@
           :schema $ quote $ Fn Tag (-> respo.schema/Element)
         'comp-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-value (states x level)
-            let
-                level $ either level 1
-              cond
-                  nil? x
-                  comp-nil
-                (number? x) (comp-number x)
-                (string? x) (comp-string x)
-                (tag? x) (comp-tag x)
-                (fn? x) (comp-function)
-                (bool? x) (comp-bool x)
-                (set? x) (comp-set states x level)
-                (list? x) (comp-list states x level)
-                (map? x) (comp-map states x level)
-                true $ div $ {} (:style widget/style-unknown)
-                  :inner-text $ str-spaced |unknown $ to-lispy-string x
+            match (data-view x)
+              (:nil) (comp-nil)
+              (:number n) (comp-number n)
+              (:string s) (comp-string s)
+              (:tag t) (comp-tag t)
+              (:fn _) (comp-function)
+              (:bool b) (comp-bool b)
+              (:set s) (comp-set states s level)
+              (:list xs) (comp-list states xs level)
+              (:map m) (comp-map states m level)
+              _ $ div $ {} (:style widget/style-unknown)
+                :inner-text $ str-spaced |unknown $ to-lispy-string x
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic StateValue) T Number (-> respo.schema/Element) (:generics StateValue T) (:features :state)
         'comp-vector $ %{} 'CodeEntry (:doc |)
@@ -296,24 +290,63 @@
           :code $ quote $ defn read-folded (state fallback)
             match (get state :folded?)
               (:some value)
-                decode-map-as (either value fallback) 'Bool
+                match (nil->option value)
+                  (:some raw) (decode-map-as raw 'Bool)
+                  (:none) fallback
               (:none) fallback
           :examples $ []
           :schema $ quote $ Fn (Map Tag StateValue) Bool (-> Bool) (:generics StateValue) (:features :js-ffi)
+          :tests $ [] $ %{} 'TestEntry (:name |preserves-falsy-nil-and-rejects-non-bool)
+            :code $ quote $ do
+              assert= true $ read-folded ({}) true
+              assert= false $ read-folded
+                {} $ :folded? false
+                , true
+              assert= true $ read-folded
+                {} $ :folded? nil
+                , true
+              assert= true $ .starts-with?
+                try
+                  do
+                    read-folded
+                      {} $ :folded? |false
+                      , true
+                    , |unexpected-success
+                  fn (message)
+                    hint-fn $ Fn String $ -> String
+                    , message
+                , "|decode-map-as failed"
+            :tags $ #{} :unit :value-boundary
         'read-state-data $ %{} 'CodeEntry
           :doc "|Narrow the dynamic component-state payload to the map used by this inspector."
           :code $ quote $ defn read-state-data (states)
             match (get states :data)
               (:some value)
-                decode-map-as
-                  either value $ {}
-                  Map Tag Dynamic
+                match (nil->option value)
+                  (:some raw)
+                    decode-map-as raw $ Map Tag Dynamic
+                  (:none) ({})
               (:none) ({})
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic StateValue)
             -> $ Map Tag Dynamic
             :generics StateValue
             :features :js-ffi
+          :tests $ [] $ %{} 'TestEntry (:name |permits-missing-or-nil-and-rejects-non-map)
+            :code $ quote $ do
+              assert= 0 $ count $ read-state-data ({})
+              assert= 0 $ count $ read-state-data
+                {} $ :data nil
+              assert= true $ .starts-with?
+                try
+                  do
+                    read-state-data $ {} $ :data 123
+                    , |unexpected-success
+                  fn (message)
+                    hint-fn $ Fn String $ -> String
+                    , message
+                , "|decode-map-as failed"
+            :tags $ #{} :unit :value-boundary
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (states xs level)
             keyed->
@@ -393,12 +426,13 @@
           :schema $ quote $ Fn (-> respo.dom/DomElement) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
-            if (nil? build-errors)
-              do (remove-watch! *store :rerender) (clear-cache!)
-                add-watch! *store :rerender $ fn (prev store) (render-app! render!)
-                render-app! render!
-                hud! |ok~ |Ok
-              hud! |error build-errors
+            match (js-nullish->option build-errors)
+              (:some errors) (hud! |error errors)
+              (:none)
+                do (remove-watch! *store :rerender) (clear-cache!)
+                  add-watch! *store :rerender $ fn (prev store) (render-app! render!)
+                  render-app! render!
+                  hud! |ok~ |Ok
             println "|Code updated."
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)

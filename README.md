@@ -5,9 +5,13 @@ Respo Value component in Calcit-js
 
 Demo http://repo.respo-mvc.org/value.calcit/ .
 
-### 0.7.14 候选 / Calcit 0.46.0
+### 0.7.15 / Calcit 0.47.0
 
-配对 Calcit / `@calcit/procs` 0.46.0 和正式 Respo 0.20.0（JS-FFI 0.2.26），重新安装依赖并生成 JS。异构输入、键和折叠行为沿用原合同；正式标签发布后再升级。
+配对 Calcit / `@calcit/procs` 0.47.0 与正式 Respo 0.20.1（JS-FFI 0.2.26），将 `comp-value` 的运行时类型分发迁移为 `data-view` 模式匹配，将 `either` 与 `reload!` 边界检查迁移为 `nil->option` 与 `js-nullish->option`，保持异构输入、键与折叠行为不变。
+
+### 0.7.14 / Calcit 0.46.0
+
+配对 Calcit / `@calcit/procs` 0.46.0 和正式 Respo 0.20.0（JS-FFI 0.2.26），重新安装依赖并生成 JS。异构输入、键和折叠行为沿用原合同。
 
 ### 0.7.13 / Calcit 0.45.1
 
